@@ -1,0 +1,47 @@
+{
+  "note": "Selected display assets for the initial website release requested by the owner on 2026-10-25. Review permissions before adding or replacing third-party media.",
+  "video": {
+    "sourceSha256": "dc8d63bf4f128b6082d8f1282f6da1304c9d24a3914b69197a01d5b1105318a2",
+    "clip": [
+      0,
+      10.14
+    ],
+    "sourceFps": 50,
+    "encodedFps": 50,
+    "audio": "removed",
+    "width": 960,
+    "speedChanged": false
+  },
+  "teaserSourceSha256": "cb38280ca08e89fab4d84ea82e5e873dc50fa6f2086d61c58ee63aca5af2cc3b",
+  "outputs": {
+    "teaser.webp": {
+      "bytes": 376876,
+      "sha256": "71fdc1c0b0427a9d9ab5ea0d2c090e7817a92476c6c6be78d61f820492b8e350"
+    },
+    "pumpkin-poster.webp": {
+      "bytes": 40054,
+      "sha256": "d5e54eeb4ebef1c1e4cd89c58ebd2a38d7542dc122a9e569dc2a7c15d9a07635"
+    },
+    "pumpkin.mp4": {
+      "bytes": 1920081,
+      "sha256": "35b08bce89e699543184e1def206acd7e383e620c1492a316f6ccd66b835dc3c"
+    },
+    "egoactionbench-logo.webp": {
+      "bytes": 308948,
+      "sha256": "d1acfc3ef24d95e30e9e10f86531732e1a749f25b366e9eb79d258c724cff2c8"
+    },
+    "favicon.png": {
+      "bytes": 15084,
+      "sha256": "f754ba5349e7731c98341e82eee7daad8bb6e3bb1b12d23ab458027b271a1f0f"
+    }
+  },
+  "logo": {
+    "source": "Final paper teaser, embedded IM9.jp2",
+    "sourceDimensions": [
+      2141,
+      287
+    ],
+    "wordmark": "Lossless extraction",
+    "favicon": "First letter of the same wordmark, fitted to 192\u00d7192"
+  }
+}

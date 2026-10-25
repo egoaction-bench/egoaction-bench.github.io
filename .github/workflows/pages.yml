@@ -1,0 +1,41 @@
+name: Deploy project page (manual)
+
+# Deliberately no push trigger. A reviewed preview is not authorization to publish.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_media_release:
+        description: "Confirm that the included teaser and EPIC-KITCHENS demo excerpt are approved for public release."
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: inputs.confirm_media_release && github.repository == 'egoaction-bench/egoaction-bench.github.io' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate the site
+        run: node --test tests/*.test.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
