@@ -67,7 +67,7 @@ Tested in the Codex in-app browser:
 This is not an exhaustive browser or accessibility certification. Public media
 release permission and real resource URLs still need owner review before
 publishing. The checks above describe the local preview before its first release.
-The optional deployment workflow is manual-only and uploads only `site/`.
+The deployment workflow uploads only `site/`.
 
 ## Initial release preparation — October 25, 2026
 
@@ -76,5 +76,9 @@ The optional deployment workflow is manual-only and uploads only `site/`.
 - Reviewed the upload allowlist: no manuscript source, reference papers, full
   dataset, credentials, symlinks, or local filesystem paths in the published files.
 - Python bytecode caches are excluded from Git.
-- The publishing branch contains only `site/`; repository tooling and provenance
-  remain on `main`, outside the website's served root.
+- The `gh-pages` snapshot contains only `site/`. The active deployment workflow
+  uploads the same site-only artifact from `main`, after the auto-created
+  branch build finishes.
+- The site-only deployment succeeded, and every published HTML/CSS/JS, data,
+  logo, teaser, poster, and video file was checked against its local bytes.
+  Repository tooling and provenance are not part of that final served artifact.

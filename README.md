@@ -93,35 +93,29 @@ papers, credentials, analytics, or external font scripts are included.
 
 ## Deployment
 
-The initial release uses a `gh-pages` branch containing only the contents of
-`site/`. In repository **Settings → Pages**, the corresponding configuration is
-**Deploy from a branch → gh-pages → / (root)**.
-Updating `main` alone does not update that published branch.
+The `Deploy project page` workflow validates the website and publishes only
+`site/`, not scripts, tests, README, or provenance files. It runs on deliberate
+pushes to `main`. A manual dispatch is also available with the media-release
+confirmation checkbox. Local edits do not publish anything until pushed.
 
-To publish a reviewed update after authorization:
+GitHub initially enabled its automatic branch-based build of `main`. The workflow
+waits for that build to finish before replacing its output with the site-only
+artifact, so the final public root is the designed website rather than the README.
+It runs on **every** push to `main`, including documentation changes, to avoid
+leaving the automatic branch build as the final deployment.
 
-```sh
-npm test
-git subtree split --prefix=site -b gh-pages
-git push origin gh-pages
-```
+For the cleanest future deployment setup, a repository administrator can select
+**Settings → Pages → Source → GitHub Actions**. The workflow detects that mode
+and skips the compatibility wait. Until that setting is changed, the automatic
+branch build may briefly appear while an update is deploying.
 
-If `gh-pages` already exists locally, use `git subtree split --prefix=site`
-without `-b`, then push the returned commit to `refs/heads/gh-pages` with a normal
-fast-forward push. Never force-push over another editor's changes.
+An initial `gh-pages` branch is retained as a site-only release snapshot; it is
+not the active publishing source and does not require a pull request.
 
-### Optional GitHub Actions deployment
-
-The workflow is **manual-only** and has no `push` trigger. It publishes only
-`site/`, not scripts, tests, or provenance files.
-
-After reviewing public-release permissions and approving the upload:
-
-1. Push the reviewed website repository to its `main` branch.
-2. In repository **Settings → Pages**, select **GitHub Actions** as the source.
-3. Run **Deploy project page (manual)** on `main`, confirming the media-release
-   checkbox. The workflow tests the site and deploys its static files.
-4. Check the deployment result and the actual project-page URL.
+To publish a reviewed update after authorization, run `npm test`, commit and push
+the changes to `main`, then verify that `Deploy project page` completed and the
+public root and assets match `site/`.
 
 The URL in the manuscript remains `https://egoaction-bench.github.io`.
-No repository setting is changed by local preview or tests.
+No repository setting is changed by local preview or tests. The current deployment
+uses the workflow's scoped Pages permission; no personal access token is stored.
