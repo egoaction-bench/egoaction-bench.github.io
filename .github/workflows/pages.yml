@@ -1,7 +1,13 @@
-name: Deploy project page (manual)
+name: Deploy project page
 
-# Deliberately no push trigger. A reviewed preview is not authorization to publish.
+# Initial public deployment authorized by the owner on 2026-10-25.
+# Future website changes deploy when deliberately pushed to main.
 on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
     inputs:
       confirm_media_release:
@@ -19,7 +25,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: inputs.confirm_media_release && github.repository == 'egoaction-bench/egoaction-bench.github.io' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || inputs.confirm_media_release) && github.repository == 'egoaction-bench/egoaction-bench.github.io' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -32,6 +38,29 @@ jobs:
       - uses: actions/checkout@v6
       - name: Validate the site
         run: node --test tests/*.test.mjs
+      - name: Select artifact-only Pages publishing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          const url = `${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/pages`;
+          const headers = {
+            Authorization: `Bearer ${process.env.GH_TOKEN}`,
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "Content-Type": "application/json",
+          };
+          const current = await fetch(url, { headers });
+          if (!current.ok) throw new Error(`Read Pages settings: HTTP ${current.status}`);
+          const page = await current.json();
+          if (page.build_type !== "workflow") {
+            const update = await fetch(url, {
+              method: "PUT", headers, body: JSON.stringify({ build_type: "workflow" }),
+            });
+            if (!update.ok) throw new Error(`Select artifact-only publishing: HTTP ${update.status}: ${await update.text()}`);
+          }
+          console.log("Pages source: GitHub Actions; only site/ will be published.");
+          JS
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
