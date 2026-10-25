@@ -29,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read
       pages: write
       id-token: write
     environment:
@@ -38,28 +39,36 @@ jobs:
       - uses: actions/checkout@v6
       - name: Validate the site
         run: node --test tests/*.test.mjs
-      - name: Select artifact-only Pages publishing
+      - name: Wait for any branch-based Pages build
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           node --input-type=module <<'JS'
-          const url = `${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/pages`;
+          // A newly created organization site can auto-enable a legacy build
+          // of main. Let it finish before publishing the site-only artifact.
+          const base = `${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}`;
           const headers = {
             Authorization: `Bearer ${process.env.GH_TOKEN}`,
             Accept: "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
-            "Content-Type": "application/json",
           };
-          const current = await fetch(url, { headers });
-          if (!current.ok) throw new Error(`Read Pages settings: HTTP ${current.status}`);
-          const page = await current.json();
-          if (page.build_type !== "workflow") {
-            const update = await fetch(url, {
-              method: "PUT", headers, body: JSON.stringify({ build_type: "workflow" }),
-            });
-            if (!update.ok) throw new Error(`Select artifact-only publishing: HTTP ${update.status}: ${await update.text()}`);
+          const settings = await fetch(`${base}/pages`, { headers });
+          if (!settings.ok) throw new Error(`Read Pages settings: HTTP ${settings.status}`);
+          if ((await settings.json()).build_type === "workflow") process.exit(0);
+          let completed = false;
+          for (let attempt = 0; attempt < 30; attempt++) {
+            const response = await fetch(`${base}/actions/runs?head_sha=${process.env.GITHUB_SHA}&per_page=100`, { headers });
+            if (!response.ok) throw new Error(`Read build status: HTTP ${response.status}`);
+            const data = await response.json();
+            const legacy = data.workflow_runs.filter(run => run.name === "pages build and deployment");
+            if (legacy.length && legacy.every(run => run.status === "completed")) {
+              completed = true;
+              break;
+            }
+            await new Promise(resolve => setTimeout(resolve, 10000));
           }
-          console.log("Pages source: GitHub Actions; only site/ will be published.");
+          if (!completed) throw new Error("Branch-based Pages build did not finish; refusing a racing deployment.");
+          console.log("Branch build finished; publishing only site/.");
           JS
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
