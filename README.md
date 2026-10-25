@@ -34,9 +34,10 @@ Do not open the HTML using `file://`; JSON loading needs HTTP.
 
 The example is the first 10.14 seconds of the pumpkin-cutting episode used in the
 paper teaser. Three buttons select **moments in that same example**, not three
-different episodes. The display is explicitly labeled **human-refined ground
-truth**, not model inference. Source captions and half-open `[start, end)` times
-are preserved. The video is resized, encoded as H.264, and stripped of audio,
+different episodes. These are source human annotations, not model inference;
+provenance remains in `site/data/sample.json` rather than in visual badges.
+Both examples display the full original captions, and half-open `[start, end)`
+times are preserved. The video is resized, encoded as H.264, and stripped of audio,
 without changing its 50 fps frame rate, time origin, or playback speed.
 
 Results come from the current manuscript snapshot identified in
@@ -68,6 +69,11 @@ The page uses larger typography throughout: 16 px desktop navigation and primary
 buttons, 18 px narrative text, and 16 px desktop result-table values. Small-screen
 layouts stack the annotations instead of shrinking the captions. Decorative
 eyebrow slogans are omitted; information and control labels remain.
+Both video examples use white backgrounds and lightly tinted, outlined caption
+cards without colored vertical bars. Captions wrap naturally at 16 px rather
+than being rewritten as short labels. Timeline widths still reflect exact action
+durations; narrow bars expose the full caption through their accessible label,
+tooltip, action picker, and selected-action detail.
 
 The wordmark in the header, hero, and footer is extracted losslessly from the
 final paper teaser, not approximated with a font. The split hero uses the existing

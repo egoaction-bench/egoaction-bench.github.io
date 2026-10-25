@@ -68,7 +68,7 @@ async function setupViewer() {
       const description = `${handNames[hand]}: ${action.caption} ${action.start.toFixed(2)} to ${action.end.toFixed(2)} seconds; duration ${(action.end - action.start).toFixed(2)} seconds.`;
       bar.setAttribute("aria-label", description);
       bar.title = description;
-      bar.textContent = action.shortLabel;
+      bar.textContent = action.caption;
       // Keep truthful durations; don't artificially widen short actions to fit text.
       if (geometry.width < 6) bar.classList.add("compact-action");
       bar.addEventListener("click", () => selectAction(action));

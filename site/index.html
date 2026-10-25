@@ -41,14 +41,13 @@
             <button id="hero-motion-toggle" class="hero-motion-toggle" type="button" aria-label="Play homepage preview" hidden><span class="motion-symbol" aria-hidden="true">▶</span><span class="motion-label">Play preview</span></button>
           </div>
           <div class="hero-film-caption">
-            <div class="hero-film-meta"><span>EPIC-KITCHENS · Cutting pumpkin</span><output id="hero-time" aria-live="off">04.50 s</output></div>
-            <div class="hero-action-list" aria-label="Human-refined annotations at the current preview time">
-              <div class="hero-action left" data-hero-hand="left"><span>Left</span><p>Press knife spine</p></div>
-              <div class="hero-action right" data-hero-hand="right"><span>Right</span><p>Cut pumpkin</p></div>
-              <div class="hero-action both" data-hero-hand="both"><span>Both</span><p>Joint cutting</p></div>
+            <div class="hero-film-meta"><output id="hero-time" aria-label="Current preview time" aria-live="off">04.50 s</output></div>
+            <div class="hero-action-list" aria-label="Action captions at the current preview time">
+              <div class="hero-action left" data-hero-hand="left"><span>Left hand</span><p>Press the back of the knife to cut the pumpkin piece.</p></div>
+              <div class="hero-action right" data-hero-hand="right"><span>Right hand</span><p>Cut the pumpkin chunks with the cleaver.</p></div>
+              <div class="hero-action both" data-hero-hand="both"><span>Both hands</span><p>Collaboratively use the cleaver to slice the pumpkin chunk.</p></div>
             </div>
             <div class="hero-film-progress" aria-hidden="true"><span id="hero-progress"></span></div>
-            <p class="hero-ground-truth">Human-refined ground truth · Not model predictions</p>
             <p id="hero-media-error" class="hero-media-error" role="status" hidden>Preview unavailable. The static frame is shown instead.</p>
           </div>
         </div>
@@ -67,15 +66,13 @@
             <video id="demo-video" src="assets/pumpkin.mp4" controls playsinline muted preload="metadata" poster="assets/pumpkin-poster.webp" aria-label="First-person video of cutting pumpkin; synchronized human action annotations are provided alongside and below.">
               Your browser does not support this video. Read the action annotations below.
             </video>
-            <div class="video-label"><span class="live-dot"></span> EPIC-KITCHENS <span class="video-label-divider">/</span> Cutting pumpkin</div>
             <p id="media-error" class="media-error" hidden>The video could not load. You can still explore its annotations using the timeline.</p>
           </div>
           <aside class="action-panel" aria-label="Actions at the current time">
             <div class="action-panel-title"><span class="tiny-label">AT THIS MOMENT</span><output id="current-time" aria-live="off">04.50 s</output></div>
-            <div class="current-action left" id="current-left"><span class="hand-label"><i></i>Left hand</span><p>Press the back of the knife to cut the pumpkin piece.</p><span class="action-time">3.94–5.46 s</span></div>
-            <div class="current-action right" id="current-right"><span class="hand-label"><i></i>Right hand</span><p>Cut the pumpkin chunks with the cleaver.</p><span class="action-time">1.14–5.46 s</span></div>
-            <div class="current-action both" id="current-both"><span class="hand-label"><i></i>Both hands</span><p>Collaboratively use the cleaver to slice the pumpkin chunk.</p><span class="action-time">3.94–5.46 s</span></div>
-            <span class="annotation-badge">Human-refined ground truth · Not model predictions</span>
+            <div class="current-action left" id="current-left"><span class="hand-label">Left hand</span><p>Press the back of the knife to cut the pumpkin piece.</p><span class="action-time">3.94–5.46 s</span></div>
+            <div class="current-action right" id="current-right"><span class="hand-label">Right hand</span><p>Cut the pumpkin chunks with the cleaver.</p><span class="action-time">1.14–5.46 s</span></div>
+            <div class="current-action both" id="current-both"><span class="hand-label">Both hands</span><p>Collaboratively use the cleaver to slice the pumpkin chunk.</p><span class="action-time">3.94–5.46 s</span></div>
           </aside>
         </div>
         <div id="interactive-controls" hidden>
@@ -95,9 +92,9 @@
         <noscript><p class="noscript-note">Enable JavaScript for the synchronized timeline. The video above can still be played with its native controls.</p></noscript>
       </div>
       <div class="moment-presets" aria-label="Explore three moments in the same clip">
-        <button type="button" class="moment" data-moment="2.5"><span class="moment-index">01</span><span><strong>Two hands, different roles</strong><small>Hold the pumpkin. Cut with the cleaver.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
-        <button type="button" class="moment active" data-moment="4.5" aria-pressed="true"><span class="moment-index">02</span><span><strong>A coordinated action</strong><small>Both hands work together to slice.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
-        <button type="button" class="moment" data-moment="6.1"><span class="moment-index">03</span><span><strong>A 0.28-second action</strong><small>Move the cut piece. Easy to miss.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
+        <button type="button" class="moment" data-moment="2.5"><span class="moment-index">01</span><span><strong>Two hands, different roles</strong><small data-caption-id="l_1">Hold the pumpkin piece.</small><small data-caption-id="r_2">Cut the pumpkin chunks with the cleaver.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
+        <button type="button" class="moment active" data-moment="4.5" aria-pressed="true"><span class="moment-index">02</span><span><strong>A coordinated action</strong><small data-caption-id="bh_1">Collaboratively use the cleaver to slice the pumpkin chunk.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
+        <button type="button" class="moment" data-moment="6.1"><span class="moment-index">03</span><span><strong>A 0.28-second action</strong><small data-caption-id="l_3">Move the cut pumpkin piece.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
       </div>
       <p class="viewer-footnote">Three moments from one real episode. Click an action bar to seek; use 0.5× playback to inspect brief actions. Colors are paired with hand labels throughout.</p>
     </section>

@@ -58,7 +58,7 @@ export async function setupHeroMotion(samplePromise) {
     lastActions = key;
     HANDS.forEach((hand, index) => {
       const selected = actions.filter((a) => a.hand === hand);
-      cards[index].querySelector("p").textContent = selected.map((a) => a.shortLabel).join(" · ") || "No action";
+      cards[index].querySelector("p").textContent = selected.map((a) => a.caption).join(" ") || "No annotated action at this moment.";
       cards[index].classList.toggle("is-empty", selected.length === 0);
     });
   }
@@ -106,7 +106,7 @@ export async function setupHeroMotion(samplePromise) {
     const actions = activeActions(sample.actions, posterTime);
     HANDS.forEach((hand, index) => {
       const selected = actions.filter((a) => a.hand === hand);
-      cards[index].querySelector("p").textContent = selected.map((a) => a.shortLabel).join(" · ") || "No action";
+      cards[index].querySelector("p").textContent = selected.map((a) => a.caption).join(" ") || "No annotated action at this moment.";
       cards[index].classList.toggle("is-empty", selected.length === 0);
     });
   }

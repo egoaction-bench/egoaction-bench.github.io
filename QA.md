@@ -2,7 +2,7 @@
 
 ## Automated checks
 
-`npm test`: 15 tests pass.
+`npm test`: 16 tests pass.
 
 - Source action IDs, hand tracks, and half-open interval boundaries.
 - The 5.98–6.26 s action is exactly 0.28 s; no neighboring annotation is
@@ -92,3 +92,22 @@ The deployment workflow uploads only `site/`.
   uses a 40 px gap, with a 28 px gap on small screens.
 - All 15 tests pass, including a regression check for the removed strip and
   byte-for-byte abstract text equality with the paper data.
+
+## Full captions and light video cards — October 25, 2026
+
+- The hero, analytical viewer, timeline labels, and moment presets use original
+  captions rather than abbreviated action labels. Sample and result JSON are
+  unchanged; no manuscript files were edited.
+- Removed visible dataset-source and ground-truth/prediction badges. Both video
+  examples have white backgrounds, with lightly tinted, uniformly outlined
+  caption cards instead of colored vertical bars.
+- All 16 tests and JavaScript syntax checks pass. The new regression checks
+  verify the static captions against the source sample, absence of unwanted
+  labels, no `shortLabel` rendering, and the light card styles.
+- Browser checks at 320, 390, 615, and 1280 px show no page-level horizontal
+  overflow or clipped caption cards. Primary captions remain 16 px.
+- The full 6.26–7.46 s caption wraps on mobile. The 0.28-second action still
+  seeks to exactly 5.98 s and shows its original caption and time interval.
+- Duration results and metric selection still work. Reduced-motion and simulated
+  blocked-video states retain the full 4.50 s captions. All test emulation and
+  viewport overrides were reset afterward; the normal video loads successfully.

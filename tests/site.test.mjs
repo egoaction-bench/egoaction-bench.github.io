@@ -69,7 +69,6 @@ test("HTML has unique IDs, valid local anchors, no fake hrefs, and source abstra
   for (const [, anchor] of html.matchAll(/href="#([^"]+)"/g)) assert(ids.includes(anchor), anchor);
   assert(!html.includes('href="javascript:'));
   assert(html.includes("Learning from human data offers a scalable path"));
-  assert(html.includes("Not model predictions"));
 });
 test("site is self-contained and contains no manuscript source or reference papers", async () => {
   const files = [];
@@ -104,7 +103,36 @@ test("homepage uses the official wordmark and omits decorative section slogans",
   assert(!heroVideo.includes("autoplay")); // Motion preference is checked in JS first.
   assert(heroVideo.includes("muted") && heroVideo.includes("playsinline"));
   assert.match(html, /id="hero-motion-toggle"/);
-  assert(html.includes("Not model predictions"));
+});
+
+test("video examples use verbatim source captions in light cards without source or prediction badges", async () => {
+  assert(!/EPIC-KITCHENS|Human.refined ground truth|(?:Not|Our) model predictions/i.test(html));
+  for (const hand of HANDS) {
+    const expected = activeActions(sample.actions, 4.5).find(a => a.hand === hand).caption;
+    const hero = html.match(new RegExp(`data-hero-hand="${hand}"[^>]*><span>[^<]+</span><p>([^<]+)</p>`));
+    const viewer = html.match(new RegExp(`id="current-${hand}"[^>]*><span[^>]*>[^<]+</span><p>([^<]+)</p>`));
+    assert.equal(hero?.[1], expected);
+    assert.equal(viewer?.[1], expected);
+  }
+  const presetCaptions = [...html.matchAll(/data-caption-id="([^"]+)">([^<]+)</g)];
+  assert.equal(presetCaptions.length, 4);
+  for (const [, id, caption] of presetCaptions) {
+    assert.equal(caption, sample.actions.find(a => a.id === id)?.caption, id);
+  }
+  for (const module of ["app.js", "motion.js"]) {
+    const source = await readFile(join(root, module), "utf8");
+    assert(!source.includes(".shortLabel"), module);
+  }
+  const css = await readFile(join(root, "styles.css"), "utf8");
+  for (const selector of [".hero-film", ".video-panel", ".action-panel"]) {
+    const rule = css.split(`${selector} {`)[1]?.split("}")[0];
+    assert.match(rule, /background: #fff;/);
+  }
+  for (const selector of [".hero-action", ".current-action"]) {
+    const rule = css.split(`${selector} {`)[1]?.split("}")[0];
+    assert.match(rule, /border: 1px solid var\(--caption-border\)/);
+    assert(!rule.includes("border-left"));
+  }
 });
 
 test("standalone benchmark statistics are omitted without changing the abstract", () => {
