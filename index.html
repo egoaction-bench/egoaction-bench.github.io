@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fafbf9">
+  <meta name="description" content="EgoActionBench benchmarks dense action captioning in egocentric human videos: what happens, when it happens, and which hand performs it.">
+  <meta property="og:title" content="EgoActionBench">
+  <meta property="og:description" content="Understanding human actions, one moment at a time. A benchmark for atomic actions, precise timing, and hand association.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://egoaction-bench.github.io/assets/teaser.webp">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>EgoActionBench — Dense Action Captioning</title>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="EgoActionBench home"><img src="assets/egoactionbench-logo.webp" width="2141" height="287" alt="EgoActionBench"></a>
+    <nav aria-label="Main navigation">
+      <a href="#explore">Explore</a><a href="#benchmark">Benchmark</a><a href="#results">Results</a><a class="nav-resource" href="#resources">Resources <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-grid wrap">
+        <div class="hero-copy">
+          <h1 id="page-title"><img src="assets/egoactionbench-logo.webp" width="2141" height="287" alt="EgoActionBench"></h1>
+          <p class="hero-statement">Every action.<br>Every hand.<br><span>Every moment.</span></p>
+          <p class="paper-title">Benchmarking Dense Action Captioning for Egocentric Human Videos</p>
+          <div class="hero-actions">
+            <a class="button button-dark" href="#explore">Explore the benchmark <span aria-hidden="true">↓</span></a>
+            <a class="button button-outline" href="#resources">Paper &amp; resources <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="hero-film" aria-label="Looping preview of a real benchmark episode">
+          <div class="hero-film-frame">
+            <video id="hero-video" src="assets/pumpkin.mp4" muted playsinline loop preload="metadata" poster="assets/pumpkin-poster.webp" aria-label="Silent preview of the pumpkin-cutting example. Use the pause button to stop motion."></video>
+            <button id="hero-motion-toggle" class="hero-motion-toggle" type="button" aria-label="Play homepage preview" hidden><span class="motion-symbol" aria-hidden="true">▶</span><span class="motion-label">Play preview</span></button>
+          </div>
+          <div class="hero-film-caption">
+            <div class="hero-film-meta"><span>EPIC-KITCHENS · Cutting pumpkin</span><output id="hero-time" aria-live="off">04.50 s</output></div>
+            <div class="hero-action-list" aria-label="Human-refined annotations at the current preview time">
+              <div class="hero-action left" data-hero-hand="left"><span>Left</span><p>Press knife spine</p></div>
+              <div class="hero-action right" data-hero-hand="right"><span>Right</span><p>Cut pumpkin</p></div>
+              <div class="hero-action both" data-hero-hand="both"><span>Both</span><p>Joint cutting</p></div>
+            </div>
+            <div class="hero-film-progress" aria-hidden="true"><span id="hero-progress"></span></div>
+            <p class="hero-ground-truth">Human-refined ground truth · Not model predictions</p>
+            <p id="hero-media-error" class="hero-media-error" role="status" hidden>Preview unavailable. The static frame is shown instead.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-credits wrap">
+        <p class="authors">Yujiao Shen<sup>1</sup><span>·</span> Jiahe Song<sup>2</sup><span>·</span> Haitian Li<sup>1</sup><span>·</span> Jingkang Yang<sup>1</sup><span>·</span> Ziwei Liu<sup>1</sup></p>
+        <p class="affiliations"><sup>1</sup> S-Lab, Nanyang Technological University <span> &nbsp; </span><sup>2</sup> Shanghai Jiao Tong University</p>
+      </div>
+    </section>
+
+    <section id="explore" class="explore wrap" aria-labelledby="explore-title">
+      <div class="section-topline"><h2 id="explore-title">See what happens.<br>Then look closer.</h2><p>What happens, when it happens,<br>and which hand performs it.</p></div>
+      <div class="viewer">
+        <div class="viewer-top">
+          <div class="video-panel">
+            <video id="demo-video" src="assets/pumpkin.mp4" controls playsinline muted preload="metadata" poster="assets/pumpkin-poster.webp" aria-label="First-person video of cutting pumpkin; synchronized human action annotations are provided alongside and below.">
+              Your browser does not support this video. Read the action annotations below.
+            </video>
+            <div class="video-label"><span class="live-dot"></span> EPIC-KITCHENS <span class="video-label-divider">/</span> Cutting pumpkin</div>
+            <p id="media-error" class="media-error" hidden>The video could not load. You can still explore its annotations using the timeline.</p>
+          </div>
+          <aside class="action-panel" aria-label="Actions at the current time">
+            <div class="action-panel-title"><span class="tiny-label">AT THIS MOMENT</span><output id="current-time" aria-live="off">04.50 s</output></div>
+            <div class="current-action left" id="current-left"><span class="hand-label"><i></i>Left hand</span><p>Press the back of the knife to cut the pumpkin piece.</p><span class="action-time">3.94–5.46 s</span></div>
+            <div class="current-action right" id="current-right"><span class="hand-label"><i></i>Right hand</span><p>Cut the pumpkin chunks with the cleaver.</p><span class="action-time">1.14–5.46 s</span></div>
+            <div class="current-action both" id="current-both"><span class="hand-label"><i></i>Both hands</span><p>Collaboratively use the cleaver to slice the pumpkin chunk.</p><span class="action-time">3.94–5.46 s</span></div>
+            <span class="annotation-badge">Human-refined ground truth · Not model predictions</span>
+          </aside>
+        </div>
+        <div id="interactive-controls" hidden>
+          <div class="playback">
+            <button id="play-toggle" class="play-button" aria-label="Play video"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg><span>Play</span></button>
+            <label class="visually-hidden" for="seek">Video position in seconds</label><input id="seek" type="range" min="0" max="10.14" step="0.01" value="4.5">
+            <output id="playback-time" for="seek" aria-live="off">04.50 / 10.14</output>
+            <label class="speed-control">Speed <select id="speed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+          </div>
+          <div class="timeline-area" aria-label="Action timeline">
+            <div class="timeline-head"><span>HAND</span><div class="timeline-axis" id="timeline-axis"></div></div>
+            <div id="timeline-rows"></div>
+          </div>
+          <label class="action-picker" for="action-picker-select">Inspect an action<select id="action-picker-select" aria-label="Inspect an action"><option value="">Choose an action…</option></select></label>
+          <div id="action-detail" class="action-detail" aria-live="polite">Select an action on the timeline to inspect its caption and time interval.</div>
+        </div>
+        <noscript><p class="noscript-note">Enable JavaScript for the synchronized timeline. The video above can still be played with its native controls.</p></noscript>
+      </div>
+      <div class="moment-presets" aria-label="Explore three moments in the same clip">
+        <button type="button" class="moment" data-moment="2.5"><span class="moment-index">01</span><span><strong>Two hands, different roles</strong><small>Hold the pumpkin. Cut with the cleaver.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
+        <button type="button" class="moment active" data-moment="4.5" aria-pressed="true"><span class="moment-index">02</span><span><strong>A coordinated action</strong><small>Both hands work together to slice.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
+        <button type="button" class="moment" data-moment="6.1"><span class="moment-index">03</span><span><strong>A 0.28-second action</strong><small>Move the cut piece. Easy to miss.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
+      </div>
+      <p class="viewer-footnote">Three moments from one real episode. Click an action bar to seek; use 0.5× playback to inspect brief actions. Colors are paired with hand labels throughout.</p>
+    </section>
+
+    <section id="benchmark" class="benchmark wrap section-space" aria-labelledby="benchmark-title">
+      <div class="intro-grid">
+        <h2 id="benchmark-title">Beyond recognizing<br>the overall activity.</h2>
+        <p class="section-description">Understanding “cutting a pumpkin” is only the beginning. Models must recover the individual actions within continuous manipulation, locate them in time, and identify which hand performs them.</p>
+      </div>
+      <div class="principles">
+        <article><span class="principle-number">01 / WHAT</span><h3>Atomic actions</h3><p>Describe the specific operation, manipulated objects, tools, and motion—not just the activity.</p><div class="mini-visual atomic-visual" aria-hidden="true"><span>Hold</span><b>→</b><span>Press</span><b>→</b><span>Move</span></div></article>
+        <article><span class="principle-number">02 / WHEN</span><h3>Precise timing</h3><p>Recover the start and end of each action, including brief movements lasting less than a second.</p><div class="mini-visual time-visual" aria-hidden="true"><span>5.98 s</span><i></i><strong>0.28 s</strong><i></i><span>6.26 s</span></div></article>
+        <article><span class="principle-number">03 / WHICH HAND</span><h3>Hand association</h3><p>Distinguish independent left- and right-hand actions from coordinated, two-handed manipulation.</p><div class="mini-visual hand-visual" aria-hidden="true"><span class="left">Left</span><span class="right">Right</span><span class="both">Both</span></div></article>
+      </div>
+      <div class="stats">
+        <div><strong>1,407</strong><span>Video episodes</span></div><div><strong>40,384</strong><span>Human-refined annotations</span></div><div><strong>19</strong><span>Evaluated VLMs</span></div><div><strong>3</strong><span>Hand tracks: left, right, both</span></div>
+      </div>
+      <details class="abstract-block"><summary>Read the abstract <span aria-hidden="true">+</span></summary><div id="abstract-text"><!-- ABSTRACT_START -->Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 40,384 human-refined action annotations. To evaluate such dense predictions, we propose a progressive evaluation protocol that first retrieves temporally eligible candidates, selects a prediction by semantic agreement, and then scores its temporal extent and hand association, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 19 vision-language models on EgoActionBench and further perform supervised fine-tuning on two backbones, Qwen3-VL-4B and LLaVA-OneVision-2-8B, using automatically annotated training episodes. Fine-tuning improves EgoActionScore by 13.3 and 20.0 points on the two backbones, respectively, and both adapted models outperform all open-source baselines. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.<!-- ABSTRACT_END --></div></details>
+      <figure class="teaser-figure">
+        <img src="assets/teaser.webp" width="2489" height="1245" loading="lazy" alt="EgoActionBench overview: first-person pumpkin cutting with separate left, right, and both-hand action timelines, atomic captions, and adjacent frames at action boundaries.">
+        <figcaption><strong>One video. Multiple layers of understanding.</strong> Dense per-hand captions, atomic action descriptions, and fine-grained temporal boundaries.</figcaption>
+      </figure>
+    </section>
+
+    <section id="evaluation" class="evaluation-band">
+      <div class="wrap">
+        <div class="intro-grid"><h2>Match the action.<br>Then measure its precision.</h2><p class="section-description">A progressive protocol evaluates what happens, when it happens, and which hand performs it—while retaining the selected prediction’s original caption and temporal extent.</p></div>
+        <ol class="evaluation-steps">
+          <li><span class="step-no">01</span><h3>Temporal eligibility</h3><p>Retrieve candidate predictions that satisfy the temporal eligibility criteria for a reference action.</p></li>
+          <li><span class="step-no">02</span><h3>Semantic selection</h3><p>Select a single prediction by semantic agreement with the reference action.</p></li>
+          <li><span class="step-no">03</span><h3>Temporal &amp; hand scoring</h3><p>Score the selected prediction’s temporal extent and hand assignment.</p></li>
+        </ol>
+        <div class="evaluation-note"><span>EgoActionScore</span><p>One overall score, complemented by Semantic, Temporal, and Hand components. Higher is better.</p></div>
+      </div>
+    </section>
+
+    <section id="results" class="results wrap section-space" aria-labelledby="results-title">
+      <div class="intro-grid"><h2 id="results-title">Fine-grained understanding<br>remains a challenge.</h2><p class="section-description">Action-level supervision improves recovery on both backbones. Short actions remain especially difficult to localize precisely.</p></div>
+      <div class="results-toolbar">
+        <div class="tabs" role="tablist" aria-label="Result analysis">
+          <button id="tab-overall" role="tab" aria-selected="true" aria-controls="panel-overall" tabindex="0">Overall performance</button>
+          <button id="tab-duration" role="tab" aria-selected="false" aria-controls="panel-duration" tabindex="-1">Sub-second actions <span>&lt;1 s</span></button>
+        </div><span class="score-scale">SCORES 0–100 · HIGHER IS BETTER</span>
+      </div>
+      <div id="results-error" class="error-note" hidden>Results could not be loaded. Please reload the page.</div>
+      <div id="panel-overall" role="tabpanel" aria-labelledby="tab-overall">
+        <p class="result-takeaway">Supervised fine-tuning improves EgoActionScore on both backbones.</p>
+        <div class="table-scroll" role="region" tabindex="0" aria-label="Overall performance table, scroll horizontally on small screens">
+          <table id="overall-table"><caption class="visually-hidden">Dense action captioning on EgoActionBench. Scores transcribed directly from the paper.</caption><thead><tr><th scope="col">Model</th><th scope="col" class="score-cell">EgoActionScore</th><th scope="col">Semantic</th><th scope="col">Temporal</th><th scope="col">Hand</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="table-bottom"><p>Selected comparisons. Shaded rows identify EgoAction SFT; the human expert is a reference, not a model.</p><button id="show-all" class="text-button" type="button" aria-expanded="false">Show all models <span aria-hidden="true">↓</span></button></div>
+      </div>
+      <div id="panel-duration" role="tabpanel" aria-labelledby="tab-duration" hidden>
+        <p class="result-takeaway">SFT substantially improves sub-second action recovery, particularly temporal localization.</p>
+        <div class="duration-toolbar"><label for="duration-metric">Metric <select id="duration-metric"><option>Temporal</option><option>EgoActionScore</option><option>Semantic</option><option>Hand</option></select></label><span><i class="shade-key"></i>Highlighted columns: actions shorter than one second</span></div>
+        <div class="table-scroll" role="region" tabindex="0" aria-label="Action duration performance table, scroll horizontally on small screens">
+          <table id="duration-table"><caption class="visually-hidden">Performance grouped by ground-truth action duration. First two columns highlight sub-second actions.</caption><thead><tr><th scope="col">Model</th><th scope="col" class="short-action">&lt;0.5 s</th><th scope="col" class="short-action">[0.5, 1) s</th><th scope="col">[1, 2) s</th><th scope="col">[2, 5) s</th><th scope="col">≥5 s</th></tr></thead><tbody></tbody></table>
+        </div>
+        <p class="table-note">The five duration bins are shown separately, without merging or reweighting. A substantial gap between short- and long-action performance remains.</p>
+      </div>
+      <noscript><p>Enable JavaScript to view and switch the results tables. The exact table data are also available in <a href="data/paper.json">JSON format</a>.</p></noscript>
+      <div class="results-source"><span>Results from the accompanying manuscript, not a live leaderboard.</span><a href="data/paper.json" download="egoactionbench-results.json">Download table data <span aria-hidden="true">↓</span></a></div>
+    </section>
+
+    <section id="resources" class="resources-band">
+      <div class="wrap">
+        <div class="intro-grid"><h2>Build on EgoActionBench.</h2><p class="section-description">Publication and release links will appear here when available. Full source videos, dataset files, and model weights are not included in this preview.</p></div>
+        <div class="resource-list">
+          <div><span class="resource-no">01</span><div><h3>Paper</h3><p>Benchmark, evaluation protocol, and experiments.</p></div><span class="status-pill">Coming soon</span></div>
+          <div><span class="resource-no">02</span><div><h3>Code &amp; evaluation</h3><p>Tools to run the benchmark and reproduce the evaluation.</p></div><span class="status-pill">Coming soon</span></div>
+          <div><span class="resource-no">03</span><div><h3>Dataset</h3><p>Annotations, access instructions, and usage conditions.</p></div><span class="status-pill">Coming soon</span></div>
+        </div>
+        <div class="citation">
+          <div><h3>Citation</h3><p>Preliminary project citation.<br>Publication details will be updated on release.</p><button id="copy-bibtex" class="button button-outline" type="button">Copy BibTeX</button><span id="copy-status" role="status"></span></div>
+          <pre><code id="bibtex">@misc{shen2026egoactionbench,
+  title  = {EgoActionBench: Benchmarking Dense Action
+            Captioning for Egocentric Human Videos},
+  author = {Shen, Yujiao and Song, Jiahe and Li, Haitian
+            and Yang, Jingkang and Liu, Ziwei},
+  year   = {2026},
+  url    = {https://egoaction-bench.github.io}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap"><a class="brand" href="#" aria-label="EgoActionBench home"><img src="assets/egoactionbench-logo.webp" width="2141" height="287" alt="EgoActionBench"></a><a href="#main">Back to top ↑</a></footer>
+</body>
+</html>
