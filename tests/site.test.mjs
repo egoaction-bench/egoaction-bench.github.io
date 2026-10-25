@@ -107,6 +107,14 @@ test("homepage uses the official wordmark and omits decorative section slogans",
   assert(html.includes("Not model predictions"));
 });
 
+test("standalone benchmark statistics are omitted without changing the abstract", () => {
+  assert(!html.includes('class="stats"'));
+  assert(!html.includes("<span>Video episodes</span>"));
+  assert(!html.includes("<span>Evaluated VLMs</span>"));
+  const abstract = html.match(/<!-- ABSTRACT_START -->(.*?)<!-- ABSTRACT_END -->/s)?.[1];
+  assert.equal(abstract, paper.abstract);
+});
+
 test("media allowlist and hashes match the reproducible local assets", async () => {
   const manifest = JSON.parse(await readFile(new URL("../media-manifest.json", import.meta.url)));
   const assets = (await readdir(join(root, "assets"))).sort();

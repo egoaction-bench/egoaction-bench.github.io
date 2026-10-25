@@ -2,7 +2,7 @@
 
 ## Automated checks
 
-`npm test`: 14 tests pass.
+`npm test`: 15 tests pass.
 
 - Source action IDs, hand tracks, and half-open interval boundaries.
 - The 5.98–6.26 s action is exactly 0.28 s; no neighboring annotation is
@@ -82,3 +82,13 @@ The deployment workflow uploads only `site/`.
 - The site-only deployment succeeded, and every published HTML/CSS/JS, data,
   logo, teaser, poster, and video file was checked against its local bytes.
   Repository tooling and provenance are not part of that final served artifact.
+
+## Remove standalone statistics — October 25, 2026
+
+- Removed the four-number statistics strip at the owner's request.
+- Retained the abstract verbatim and left all source data and result tables unchanged.
+- Removed unused statistics CSS and its scroll-animation target.
+- Checked the desktop transition from benchmark features to the abstract; it now
+  uses a 40 px gap, with a 28 px gap on small screens.
+- All 15 tests pass, including a regression check for the removed strip and
+  byte-for-byte abstract text equality with the paper data.

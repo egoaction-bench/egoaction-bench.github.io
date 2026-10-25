@@ -20,7 +20,7 @@ export function setupScrollMotion() {
       ], { duration: 600, easing: "cubic-bezier(.2,.7,.2,1)" });
     }
   }, { threshold: 0.12 });
-  document.querySelectorAll(".section-topline,.intro-grid,.principles article,.stats,.teaser-figure,.evaluation-steps li,.citation").forEach((element) => observer.observe(element));
+  document.querySelectorAll(".section-topline,.intro-grid,.principles article,.teaser-figure,.evaluation-steps li,.citation").forEach((element) => observer.observe(element));
   reduced.addEventListener("change", () => {
     if (reduced.matches) {
       observer.disconnect();
