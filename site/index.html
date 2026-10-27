@@ -37,19 +37,11 @@
         </div>
         <div class="hero-film" aria-label="Looping preview of a real benchmark episode">
           <div class="hero-film-frame">
-            <video id="hero-video" src="assets/pumpkin.mp4" muted playsinline loop preload="metadata" poster="assets/pumpkin-poster.webp" aria-label="Silent preview of the pumpkin-cutting example. Use the pause button to stop motion."></video>
+            <video id="hero-video" src="assets/pumpkin-captioned.mp4" muted playsinline loop preload="metadata" poster="assets/pumpkin-captioned-poster.webp" aria-label="Silent preview of the pumpkin-cutting example with full action captions in the video. Use the pause button to stop motion."></video>
             <button id="hero-motion-toggle" class="hero-motion-toggle" type="button" aria-label="Play homepage preview" hidden><span class="motion-symbol" aria-hidden="true">▶</span><span class="motion-label">Play preview</span></button>
+            <a class="hero-expand" href="assets/pumpkin-captioned.mp4" target="_blank" rel="noopener" aria-label="Open full-size captioned video in a new tab" title="Open full-size video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></svg></a>
           </div>
-          <div class="hero-film-caption">
-            <div class="hero-film-meta"><output id="hero-time" aria-label="Current preview time" aria-live="off">04.50 s</output></div>
-            <div class="hero-action-list" aria-label="Action captions at the current preview time">
-              <div class="hero-action left" data-hero-hand="left"><span>Left hand</span><p>Press the back of the knife to cut the pumpkin piece.</p></div>
-              <div class="hero-action right" data-hero-hand="right"><span>Right hand</span><p>Cut the pumpkin chunks with the cleaver.</p></div>
-              <div class="hero-action both" data-hero-hand="both"><span>Both hands</span><p>Collaboratively use the cleaver to slice the pumpkin chunk.</p></div>
-            </div>
-            <div class="hero-film-progress" aria-hidden="true"><span id="hero-progress"></span></div>
-            <p id="hero-media-error" class="hero-media-error" role="status" hidden>Preview unavailable. The static frame is shown instead.</p>
-          </div>
+          <p id="hero-media-error" class="hero-media-error" role="status" hidden>Preview unavailable. The static frame is shown instead.</p>
         </div>
       </div>
       <div class="hero-credits wrap">

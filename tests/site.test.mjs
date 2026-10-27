@@ -102,16 +102,17 @@ test("homepage uses the official wordmark and omits decorative section slogans",
   assert(heroVideo);
   assert(!heroVideo.includes("autoplay")); // Motion preference is checked in JS first.
   assert(heroVideo.includes("muted") && heroVideo.includes("playsinline"));
+  assert(heroVideo.includes('src="assets/pumpkin-captioned.mp4"'));
+  assert(heroVideo.includes('poster="assets/pumpkin-captioned-poster.webp"'));
+  assert(!/data-hero-hand|id="hero-time"|id="hero-progress"/.test(html));
   assert.match(html, /id="hero-motion-toggle"/);
 });
 
-test("video examples use verbatim source captions in light cards without source or prediction badges", async () => {
+test("analytical viewer retains verbatim source captions in light cards without source or prediction badges", async () => {
   assert(!/EPIC-KITCHENS|Human.refined ground truth|(?:Not|Our) model predictions/i.test(html));
   for (const hand of HANDS) {
     const expected = activeActions(sample.actions, 4.5).find(a => a.hand === hand).caption;
-    const hero = html.match(new RegExp(`data-hero-hand="${hand}"[^>]*><span>[^<]+</span><p>([^<]+)</p>`));
     const viewer = html.match(new RegExp(`id="current-${hand}"[^>]*><span[^>]*>[^<]+</span><p>([^<]+)</p>`));
-    assert.equal(hero?.[1], expected);
     assert.equal(viewer?.[1], expected);
   }
   const presetCaptions = [...html.matchAll(/data-caption-id="([^"]+)">([^<]+)</g)];
@@ -128,7 +129,7 @@ test("video examples use verbatim source captions in light cards without source 
     const rule = css.split(`${selector} {`)[1]?.split("}")[0];
     assert.match(rule, /background: #fff;/);
   }
-  for (const selector of [".hero-action", ".current-action"]) {
+  for (const selector of [".current-action"]) {
     const rule = css.split(`${selector} {`)[1]?.split("}")[0];
     assert.match(rule, /border: 1px solid var\(--caption-border\)/);
     assert(!rule.includes("border-left"));
@@ -146,7 +147,7 @@ test("standalone benchmark statistics are omitted without changing the abstract"
 test("media allowlist and hashes match the reproducible local assets", async () => {
   const manifest = JSON.parse(await readFile(new URL("../media-manifest.json", import.meta.url)));
   const assets = (await readdir(join(root, "assets"))).sort();
-  assert.deepEqual(assets, ["egoactionbench-logo.webp", "favicon.png", "pumpkin-poster.webp", "pumpkin.mp4", "teaser.webp"]);
+  assert.deepEqual(assets, ["egoactionbench-logo.webp", "favicon.png", "pumpkin-captioned-poster.webp", "pumpkin-captioned.mp4", "pumpkin-poster.webp", "pumpkin.mp4", "teaser.webp"]);
   assert.deepEqual(Object.keys(manifest.outputs).sort(), assets);
   for (const name of assets) {
     const buffer = await readFile(join(root, "assets", name));

@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUTS = ("teaser.webp", "pumpkin-poster.webp", "pumpkin.mp4",
            "egoactionbench-logo.webp", "favicon.png")
+REVIEWED_OUTPUTS = ("pumpkin-captioned.mp4", "pumpkin-captioned-poster.webp")
 
 
 def prepare_logo(teaser, assets):
@@ -51,6 +52,11 @@ def main():
     args = parser.parse_args()
     assets = ROOT / "site/assets"
     assets.mkdir(parents=True, exist_ok=True)
+    manifest_path = ROOT / "media-manifest.json"
+    previous_manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+    reviewed = tuple(name for name in REVIEWED_OUTPUTS if (assets / name).is_file())
+    if reviewed and reviewed != REVIEWED_OUTPUTS:
+        raise ValueError("Keep the reviewed captioned video and its poster together.")
     logo_provenance = prepare_logo(args.teaser, assets)
     with pdfium.PdfDocument(args.teaser) as pdf:
         assert len(pdf) == 1, "Supply the final single-page teaser, not a comparison deck."
@@ -74,9 +80,12 @@ def main():
         "teaserSourceSha256": hashlib.sha256(args.teaser.read_bytes()).hexdigest(),
         "logo": logo_provenance,
         "outputs": {p.name: {"bytes": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
-                    for p in (assets / name for name in OUTPUTS)},
+                    for p in (assets / name for name in OUTPUTS + reviewed)},
     }
-    (ROOT / "media-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    # The approved captioned clip is imported separately, never silently regenerated.
+    if reviewed and "heroVideo" in previous_manifest:
+        manifest["heroVideo"] = previous_manifest["heroVideo"]
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
     print("Prepared only " + ", ".join(OUTPUTS) + ".")
 
 

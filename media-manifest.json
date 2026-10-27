@@ -33,6 +33,14 @@
     "favicon.png": {
       "bytes": 15084,
       "sha256": "f754ba5349e7731c98341e82eee7daad8bb6e3bb1b12d23ab458027b271a1f0f"
+    },
+    "pumpkin-captioned.mp4": {
+      "bytes": 9311616,
+      "sha256": "e8bff7eca84f6ce00b054581eef7159243936befe5c195c543e09987ce0e2b3b"
+    },
+    "pumpkin-captioned-poster.webp": {
+      "bytes": 174530,
+      "sha256": "732223be688203b14e8232ef0cdfd0a2275af618f24e06da190865087f1ce74a"
     }
   },
   "logo": {
@@ -43,5 +51,65 @@
     ],
     "wordmark": "Lossless extraction",
     "favicon": "First letter of the same wordmark, fitted to 192\u00d7192"
+  },
+  "heroVideo": {
+    "asset": "pumpkin-captioned.mp4",
+    "poster": "pumpkin-captioned-poster.webp",
+    "posterTime": 4.5,
+    "approvedAt": "2026-10-27",
+    "derivedFromClipSha256": "35b08bce89e699543184e1def206acd7e383e620c1492a316f6ccd66b835dc3c",
+    "annotationSha256": "acb4207e4d27816a7bec196ce4f15f5ae87ba3a5af782fca9dda1d48b08aeaad",
+    "duration": 10.14,
+    "fps": 50,
+    "frames": 507,
+    "width": 1920,
+    "height": 1080,
+    "captions": "Full source captions burned into the reviewed video, preserving half-open intervals.",
+    "positioning": "Hand-aware layout with smooth transitions; empty hand cards are omitted.",
+    "audio": "none",
+    "speedChanged": false,
+    "handDetection": {
+      "engine": "macOS Vision VNDetectHumanHandPoseRequest",
+      "sample_rate": 50,
+      "frames_with_two_hands": 505,
+      "missing_filled": [
+        {
+          "frame": 0,
+          "filled_from_frame": 2
+        },
+        {
+          "frame": 1,
+          "filled_from_frame": 2
+        }
+      ]
+    },
+    "layoutVerification": {
+      "caption_text": "verbatim from sample.json",
+      "empty_hand_cards": "omitted",
+      "protection": "bounding union of detected hands plus 32 source pixels, including space between hands",
+      "center_unsafe_spans_frames": [
+        [
+          197,
+          272
+        ],
+        [
+          429,
+          443
+        ]
+      ],
+      "merged_safe_hold_spans_frames": [
+        [
+          197,
+          272
+        ],
+        [
+          429,
+          443
+        ]
+      ],
+      "move_seconds": 0.72,
+      "safe_arrival_lead_seconds": 0.08,
+      "intersection_frames_with_protected_region": 0
+    }
   }
 }
