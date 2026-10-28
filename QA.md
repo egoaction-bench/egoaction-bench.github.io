@@ -2,7 +2,7 @@
 
 ## Automated checks
 
-`npm test`: 16 tests pass.
+`npm test`: 17 tests pass.
 
 - Source action IDs, hand tracks, and half-open interval boundaries.
 - The 5.98–6.26 s action is exactly 0.28 s; no neighboring annotation is
@@ -111,3 +111,13 @@ The deployment workflow uploads only `site/`.
 - Duration results and metric selection still work. Reduced-motion and simulated
   blocked-video states retain the full 4.50 s captions. All test emulation and
   viewport overrides were reset afterward; the normal video loads successfully.
+
+## Purple keyword emphasis — October 28, 2026
+
+- Only `action`, `hand`, and `moment` are highlighted in the existing
+  `--both` purple (`#69459e`). `Every` and punctuation remain `--ink` (`#152036`).
+- Removed obsolete whole-line accent and breakpoint rules; the headline keeps
+  its three lines at 320, 390, 768, and 1280 px with no page-level overflow.
+- All 17 tests pass, including a regression check for the three exact highlighted
+  words and their shared color token. Video assets, annotations, and results are
+  unchanged.

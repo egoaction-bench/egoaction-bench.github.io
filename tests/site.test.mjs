@@ -108,6 +108,15 @@ test("homepage uses the official wordmark and omits decorative section slogans",
   assert.match(html, /id="hero-motion-toggle"/);
 });
 
+test("hero highlights only action, hand, and moment in the existing violet", async () => {
+  const statement = html.match(/<p class="hero-statement">(.*?)<\/p>/s)?.[1];
+  assert.equal(statement, 'Every <span class="hero-keyword">action</span>.<br>Every <span class="hero-keyword">hand</span>.<br>Every <span class="hero-keyword">moment</span>.');
+  const css = await readFile(join(root, "styles.css"), "utf8");
+  assert.match(css, /\.hero-statement\s*\{[^}]*color:\s*var\(--ink\)/);
+  assert.match(css, /\.hero-keyword\s*\{[^}]*color:\s*var\(--both\)/);
+  assert(!/\.hero-statement (?:br|> span)/.test(css));
+});
+
 test("analytical viewer retains verbatim source captions in light cards without source or prediction badges", async () => {
   assert(!/EPIC-KITCHENS|Human.refined ground truth|(?:Not|Our) model predictions/i.test(html));
   for (const hand of HANDS) {
