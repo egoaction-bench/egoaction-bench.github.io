@@ -1,5 +1,6 @@
 import { HANDS, activeActions, actionGeometry, clampTime, formatTime, validateSample } from "./logic.js";
 import { setupHeroMotion, setupScrollMotion } from "./motion.js";
+import { bindTimelineScrubbing } from "./timeline.js";
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -30,6 +31,7 @@ async function setupViewer() {
   let initialized = false;
   const bars = [];
   const heads = [];
+  const finishScrubs = [];
   const picker = $("#action-picker-select");
   const defaultDetail = "Select an action on the timeline to inspect its caption and time interval.";
   for (const time of [0, 2, 4, 6, 8, sample.duration]) {
@@ -39,14 +41,19 @@ async function setupViewer() {
     $("#timeline-axis").append(tick);
   }
 
-  function selectAction(action) {
-    selected = action.id;
-    picker.value = action.id;
-    seekTo(action.start);
+  function showAction(action) {
+    selected = action?.id ?? null;
+    picker.value = selected ?? "";
+    if (!action) { detail.textContent = defaultDetail; return; }
     detail.replaceChildren();
     const lead = document.createElement("strong");
     lead.textContent = `${handNames[action.hand]} · ${action.caption} `;
     detail.append(lead, `${action.start.toFixed(2)}–${action.end.toFixed(2)} s · ${(action.end - action.start).toFixed(2)} s duration`);
+  }
+
+  function selectAction(action) {
+    showAction(action);
+    seekTo(action.start);
   }
 
   for (const hand of HANDS) {
@@ -71,7 +78,11 @@ async function setupViewer() {
       bar.textContent = action.caption;
       // Keep truthful durations; don't artificially widen short actions to fit text.
       if (geometry.width < 6) bar.classList.add("compact-action");
-      bar.addEventListener("click", () => selectAction(action));
+      // Pointer gestures are handled by the track. Keyboard activation retains
+      // the action-start shortcut, without snapping a completed drag backwards.
+      bar.addEventListener("click", (event) => {
+        if (event.detail === 0) selectAction(action);
+      });
       const option = document.createElement("option");
       option.value = action.id;
       option.textContent = `${handNames[hand]} · ${action.start.toFixed(2)} s · ${action.caption}`;
@@ -84,6 +95,26 @@ async function setupViewer() {
     head.setAttribute("aria-hidden", "true");
     track.append(head);
     heads.push(head);
+    finishScrubs.push(bindTimelineScrubbing(track, {
+      duration: sample.duration,
+      onStart() {
+        const wasPlaying = !video.paused;
+        video.pause();
+        return wasPlaying;
+      },
+      onSeek(time) {
+        showAction(activeActions(sample.actions, time).find((action) => action.hand === hand));
+        seekTo(time);
+      },
+      onEnd(wasPlaying) {
+        if (!wasPlaying || document.hidden || video.error || play.disabled || displayTime >= sample.duration) return;
+        video.play().catch((error) => {
+          if (error.name === "AbortError") return;
+          $("#media-error").hidden = false;
+          $("#media-error").textContent = "Playback could not resume. Press Play to try again.";
+        });
+      },
+    }));
     row.append(label, track);
     $("#timeline-rows").append(row);
   }
@@ -173,7 +204,10 @@ async function setupViewer() {
     $("#media-error").hidden = false;
   });
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) video.pause();
+    if (document.hidden) {
+      finishScrubs.forEach((finish) => finish());
+      video.pause();
+    }
   });
   play.addEventListener("click", async () => {
     if (!video.paused) { video.pause(); return; }
