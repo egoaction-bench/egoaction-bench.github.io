@@ -72,7 +72,7 @@
             <button id="play-toggle" class="play-button" aria-label="Play video"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg><span>Play</span></button>
             <label class="visually-hidden" for="seek">Video position in seconds</label><input id="seek" type="range" min="0" max="10.14" step="0.01" value="4.5">
             <output id="playback-time" for="seek" aria-live="off">04.50 / 10.14</output>
-            <label class="speed-control">Speed <select id="speed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+            <label class="speed-control">Speed <select id="speed" aria-label="Playback speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
           </div>
           <div class="timeline-area" aria-label="Action timeline">
             <div class="timeline-head"><span>HAND</span><div class="timeline-axis" id="timeline-axis"></div></div>
@@ -88,7 +88,7 @@
         <button type="button" class="moment active" data-moment="4.5" aria-pressed="true"><span class="moment-index">02</span><span><strong>A coordinated action</strong><small data-caption-id="bh_1">Collaboratively use the cleaver to slice the pumpkin chunk.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
         <button type="button" class="moment" data-moment="6.1"><span class="moment-index">03</span><span><strong>A 0.28-second action</strong><small data-caption-id="l_3">Move the cut pumpkin piece.</small></span><span class="moment-arrow" aria-hidden="true">↗</span></button>
       </div>
-      <p class="viewer-footnote">Click or drag a track to seek to any time. Use the action picker to jump to an action’s start, or 0.5× playback to inspect brief actions. On small screens, swipe the time ruler to scroll the timeline.</p>
+      <p class="viewer-footnote">Click or drag a track to seek to any time. Use the action picker to jump to an action’s start, or 0.25× and 0.5× playback to inspect brief actions. On small screens, swipe the time ruler to scroll the timeline.</p>
     </section>
 
     <section id="benchmark" class="benchmark wrap section-space" aria-labelledby="benchmark-title">
