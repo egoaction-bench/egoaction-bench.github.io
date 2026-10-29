@@ -1,4 +1,4 @@
-import { HANDS, activeActions, actionGeometry, clampTime, formatTime, validateSample } from "./logic.js";
+import { HANDS, OVERALL_METRICS, activeActions, actionGeometry, clampTime, formatTime, validateSample } from "./logic.js?v=20261030-results-v2";
 import { setupHeroMotion, setupScrollMotion } from "./motion.js";
 import { bindTimelineScrubbing } from "./timeline.js";
 
@@ -255,52 +255,58 @@ async function setupViewer() {
 
 function appendRow(body, row, values, duration = false) {
   const tr = document.createElement("tr");
-  if (row.sft) tr.className = "sft-row";
+  tr.dataset.model = row.model;
+  if (row.ours) tr.className = "ours-row";
   if (row.reference) tr.className = "reference-row";
   const th = document.createElement("th");
   th.scope = "row";
+  th.className = "result-model";
   th.textContent = row.displayName || row.model;
-  if (row.sft) {
-    const tag = document.createElement("span");
-    tag.className = "model-type";
-    tag.textContent = "+ SFT";
-    th.append(tag);
-  }
   tr.append(th);
   values.forEach((value, index) => {
     const td = document.createElement("td");
     td.textContent = value.toFixed(1);
     if (duration && index < 2) td.className = "short-action";
-    if (!duration && index === 0) td.className = "score-cell";
+    if (!duration && [0, 3, 9].includes(index)) td.classList.add("score-cell");
+    if (!duration && [1, 4].includes(index)) td.classList.add("metric-group-start");
     tr.append(td);
   });
   body.append(tr);
 }
 
 async function setupResults() {
-  const data = await readData("data/paper.json");
-  let allModels = false;
-  const selectedNames = [
-    "Human Expert", "GPT-6 Astra", "Qwen3-VL-32B-Instruct",
-    "Qwen3-VL-4B-Instruct", "EgoAction (Qwen3-VL-4B)",
-    "LLaVA-OV2-8B", "EgoAction (LLaVA-OV2-8B)"
-  ];
+  const data = await readData("data/paper.json?v=20261030-results-v2");
   function renderOverall() {
-    const body = $("#overall-table tbody");
-    body.replaceChildren();
-    const rows = allModels ? data.overall : selectedNames.map((name) => data.overall.find((row) => row.model === name)).filter(Boolean);
-    rows.forEach((row) => appendRow(body, row, [row.score, row.semantic, row.temporal, row.hand]));
-    $("#show-all").innerHTML = allModels ? 'Show selected comparisons <span aria-hidden="true">↑</span>' : 'Show all models <span aria-hidden="true">↓</span>';
-    $("#show-all").setAttribute("aria-expanded", String(allModels));
+    const table = $("#overall-table");
+    table.querySelectorAll("tbody").forEach((body) => body.remove());
+    let group = null;
+    let body = null;
+    for (const row of data.overall) {
+      if (row.group !== group) {
+        group = row.group;
+        body = document.createElement("tbody");
+        body.setAttribute("aria-label", group);
+        const heading = document.createElement("tr");
+        heading.className = "result-group";
+        const cell = document.createElement("th");
+        cell.colSpan = OVERALL_METRICS.length + 1;
+        cell.scope = "rowgroup";
+        cell.textContent = group;
+        heading.append(cell);
+        body.append(heading);
+        table.append(body);
+      }
+      appendRow(body, row, OVERALL_METRICS.map((metric) => row.scores[metric]));
+    }
   }
   function renderDuration() {
     const metric = $("#duration-metric").value;
     const body = $("#duration-table tbody");
     body.replaceChildren();
     data.duration.filter((row) => row.metric === metric).forEach((row) => appendRow(body, row, row.values, true));
-    $("#duration-table caption").textContent = `${metric} by ground-truth action duration. Scores 0–100, higher is better. First two columns highlight sub-second actions.`;
+    const metricName = metric === "m_tIoU" ? "m-tIoU" : metric;
+    $("#duration-table caption").textContent = `${metricName} by ground-truth action duration. Scores 0–100, higher is better. First two columns highlight sub-second actions.`;
   }
-  $("#show-all").addEventListener("click", () => { allModels = !allModels; renderOverall(); });
   $("#duration-metric").addEventListener("change", renderDuration);
   const tabs = $$('[role="tab"]');
   function activateTab(target, focus = false) {

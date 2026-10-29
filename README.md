@@ -20,12 +20,13 @@ Do not open the HTML using `file://`; JSON loading needs HTTP.
 
 ## Structure
 
-- `site/index.html`, `styles.css`, `app.js`, `logic.js`, `motion.js`: the self-contained page.
-- `site/assets/`: five hand-selected display assets, not a source-data cache.
-- `site/data/paper.json`: overall and duration tables exported from the manuscript.
+- `site/index.html`, `styles.css`, `app.js`, `logic.js`, `motion.js`, `timeline.js`: the self-contained page.
+- `site/assets/`: seven selected display assets.
+- `site/data/paper.json`: benchmark overview, 22 main-table rows with ten metrics,
+  and 24 duration rows with five bins, exported from the manuscript.
 - `site/data/sample.json`: eleven original annotations for one 10.14-second excerpt.
-- `scripts/sync-paper.py`: extracts selected paper content, checking CSV scores
-  against the LaTeX duration table before export.
+- `scripts/sync-paper.py`: checks main-table values against the result JSON and
+  archived final-model scores, and duration CSV values against the LaTeX table.
 - `scripts/prepare-assets.py`: reproduces the small video, poster, teaser image,
   official teaser wordmark, and first-letter favicon.
 - `tests/`: source-data, interval, asset, HTML, and preview-server regression checks.
@@ -40,19 +41,26 @@ Both examples display the full original captions, and half-open `[start, end)`
 times are preserved. The video is resized, encoded as H.264, and stripped of audio,
 without changing its 50 fps frame rate, time origin, or playback speed.
 
-Results come from the current manuscript snapshot identified in
-`site/data/paper.json`. Displayed one-decimal scores are not recomputed. All five
-duration bins remain separate. The date in the existing manuscript is not changed.
+Results come from the manuscript snapshot and file hashes identified in
+`site/data/paper.json`. All 220 main-table values and 120 duration values retain
+the paper's one-decimal display precision. EgoAction rows use the archived final
+model results. The overview is a benchmark-focused excerpt of the paper abstract.
 The BibTeX entry is a preliminary project citation, not an invented publication.
 
-To update the selected text and scores:
+To update and verify the benchmark overview and scores while preserving the demo:
 
 ```sh
 python3 scripts/sync-paper.py \
   --paper /absolute/path/to/EgoAction_Paper \
-  --episode /absolute/path/to/source_gt_episode.json
+  --results-only
+python3 scripts/sync-paper.py \
+  --paper /absolute/path/to/EgoAction_Paper \
+  --results-only --check
 npm test
 ```
+
+To intentionally regenerate the demo annotations as well, replace `--results-only`
+with `--episode /absolute/path/to/source_gt_episode.json`.
 
 Optional asset regeneration requires `pypdfium2`, `pypdf`, Pillow, and an existing FFmpeg executable:
 
@@ -69,11 +77,12 @@ The page uses larger typography throughout: 16 px desktop navigation and primary
 buttons, 18 px narrative text, and 16 px desktop result-table values. Small-screen
 layouts stack the annotations instead of shrinking the captions. Decorative
 eyebrow slogans are omitted; information and control labels remain.
-Both video examples use white backgrounds and lightly tinted, outlined caption
-cards without colored vertical bars. Captions wrap naturally at 16 px rather
-than being rewritten as short labels. Timeline widths still reflect exact action
-durations; narrow bars expose the full caption through their accessible label,
-tooltip, action picker, and selected-action detail.
+The homepage video contains the approved moving captions. The analytical viewer
+shows full captions alongside the original clip. Timeline tracks support arbitrary
+clicking and dragging; the action picker and keyboard activation retain action-start
+shortcuts. The results table displays all models and ten grouped metrics, with a
+fixed header and model column for scrolling. The duration tab exposes m-tIoU,
+Content, Semantic, and Hand separately across five time ranges.
 
 The wordmark in the header, hero, and footer is extracted losslessly from the
 final paper teaser, not approximated with a font. The split hero uses the existing

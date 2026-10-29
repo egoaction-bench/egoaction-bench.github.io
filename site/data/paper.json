@@ -1,549 +1,752 @@
 {
+  "schemaVersion": 2,
   "source": {
-    "paperRevision": "74129d2fa97c5503033f97d23b9461ef71380267",
-    "note": "Snapshot of the manuscript, not a live leaderboard.",
+    "paperRevision": "a128f917d440d914a3004dc9e1ddb55386e899ee",
+    "note": "Benchmark display values transcribed from the current manuscript tables.",
+    "overviewScope": "Benchmark-focused excerpt of the manuscript abstract.",
+    "metricProtocolVersion": "5.5",
+    "metricProtocolSha256": "8ffa7d5ceae792f63e832434f6b20b7b70148391962bd79011583bcc3ecf2b01",
     "files": {
-      "arxiv/abstract.tex": "8018999cae771a3d0a540e06bf0f822c177226e72e571138ea624d86e17f929e",
-      "arxiv/main.tex": "3ac288852c51f228e39a84bd06da4d1724d82f262c16be980e6e9dfe82bec1ec",
-      "arxiv/table/tab_main_results_dev15.tex": "f1c91e8e1988cde22f1df75a822fafbec7bafc8fb55d0d8f8669b0b4f64bf3cc",
-      "arxiv/table/tab_action_duration.tex": "d8d8259042762520edafc9462dca817e84603ef0823173c17e3de817babf3489",
-      "arxiv/data/action_duration/heatmap_scores.csv": "616592a385cbd786cb5f7b4917d1d92e28fa349dc9ffd78ef579d74479bc1b90"
+      "arxiv/abstract.tex": "52d88ac1fe14f39a655f9d040fec2a6e08587947ec2e51382c6bf2b2245a20cd",
+      "arxiv/table/tab_main_results_dev15.tex": "826955d96a28589871595a406ab5dd4e884c1cf9da74b55d760b4487416a593e",
+      "arxiv/data/main_results.json": "a43257b1417d3b29210a5674d7cdde368bde388817b9320a322fc9828e62fd60",
+      "arxiv/table/tab_action_duration.tex": "24d970a0b3e42df89368c93b6596e219408dbc13f0e60d1e76dd05ae0b50fa4e",
+      "arxiv/data/action_duration/heatmap_scores.csv": "befe981b25e2a1eba5f9e42fd7f5144f9b1ba58802188b0d2004f4d752a10965",
+      "arxiv/data/action_duration/provenance_v55.json": "cf60342c3473cb2afa52a656b6ff08fd30bbc2ce41255689b82f789ffbd816b8"
     }
   },
-  "abstract": "Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 40,384 human-refined action annotations. To evaluate such dense predictions, we propose a progressive evaluation protocol that first retrieves temporally eligible candidates, selects a prediction by semantic agreement, and then scores its temporal extent and hand association, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 19 vision-language models on EgoActionBench and further perform supervised fine-tuning on two backbones, Qwen3-VL-4B and LLaVA-OneVision-2-8B, using automatically annotated training episodes. Fine-tuning improves EgoActionScore by 13.3 and 20.0 points on the two backbones, respectively, and both adapted models outperform all open-source baselines. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.",
+  "overview": "Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 41,132 human-refined action annotations. To evaluate such dense predictions, we propose a progressive evaluation protocol that retrieves temporally eligible candidates, selects a prediction by content agreement, and scores semantic fidelity and temporal overlap alongside action precision and recall, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 19 vision-language models on EgoActionBench. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.",
   "overall": [
     {
       "model": "Human Expert",
       "displayName": "Human Expert",
-      "sft": false,
+      "group": "Human Baseline",
+      "ours": false,
       "reference": true,
-      "score": 92.5,
-      "semantic": 89.4,
-      "temporal": 92.2,
-      "hand": 96.0
+      "scores": {
+        "EgoActionScore": 90.4,
+        "m_tIoU": 88.4,
+        "F1": 93.1,
+        "Temporal": 90.8,
+        "Hand": 95.5,
+        "Verb": 94.5,
+        "Objects": 95.1,
+        "Tools": 94.8,
+        "Motion": 74.5,
+        "Semantic": 90.1
+      }
     },
     {
       "model": "GPT-5.6 Sol",
       "displayName": "GPT-5.6 Sol",
-      "sft": false,
+      "group": "Proprietary models",
+      "ours": false,
       "reference": false,
-      "score": 54.2,
-      "semantic": 51.5,
-      "temporal": 36.5,
-      "hand": 74.6
+      "scores": {
+        "EgoActionScore": 49.8,
+        "m_tIoU": 31.0,
+        "F1": 57.6,
+        "Temporal": 44.3,
+        "Hand": 67.1,
+        "Verb": 50.8,
+        "Objects": 60.5,
+        "Tools": 77.4,
+        "Motion": 41.5,
+        "Semantic": 55.2
+      }
     },
     {
       "model": "GPT-6 Astra",
       "displayName": "GPT-6 Astra",
-      "sft": false,
+      "group": "Proprietary models",
+      "ours": false,
       "reference": false,
-      "score": 61.3,
-      "semantic": 60.8,
-      "temporal": 44.6,
-      "hand": 78.4
+      "scores": {
+        "EgoActionScore": 59.6,
+        "m_tIoU": 40.6,
+        "F1": 68.6,
+        "Temporal": 54.6,
+        "Hand": 75.8,
+        "Verb": 63.3,
+        "Objects": 69.9,
+        "Tools": 80.8,
+        "Motion": 48.9,
+        "Semantic": 64.6
+      }
     },
     {
       "model": "Gemini 3.1 Pro Preview",
       "displayName": "Gemini 3.1 Pro Preview",
-      "sft": false,
+      "group": "Proprietary models",
+      "ours": false,
       "reference": false,
-      "score": 41.0,
-      "semantic": 37.3,
-      "temporal": 24.4,
-      "hand": 61.2
+      "scores": {
+        "EgoActionScore": 34.8,
+        "m_tIoU": 18.1,
+        "F1": 41.8,
+        "Temporal": 29.9,
+        "Hand": 49.4,
+        "Verb": 34.5,
+        "Objects": 43.6,
+        "Tools": 64.5,
+        "Motion": 30.7,
+        "Semantic": 39.8
+      }
     },
     {
       "model": "Qwen2.5-VL-72B-Instruct",
       "displayName": "Qwen2.5-VL-72B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 38.1,
-      "semantic": 24.3,
-      "temporal": 14.1,
-      "hand": 75.8
+      "scores": {
+        "EgoActionScore": 24.7,
+        "m_tIoU": 8.2,
+        "F1": 26.1,
+        "Temporal": 17.2,
+        "Hand": 43.4,
+        "Verb": 26.8,
+        "Objects": 32.8,
+        "Tools": 49.3,
+        "Motion": 25.4,
+        "Semantic": 32.2
+      }
     },
     {
       "model": "Qwen3-VL-32B-Instruct",
       "displayName": "Qwen3-VL-32B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 42.1,
-      "semantic": 33.3,
-      "temporal": 17.1,
-      "hand": 75.9
+      "scores": {
+        "EgoActionScore": 29.2,
+        "m_tIoU": 11.8,
+        "F1": 32.0,
+        "Temporal": 21.9,
+        "Hand": 48.5,
+        "Verb": 30.8,
+        "Objects": 37.2,
+        "Tools": 58.2,
+        "Motion": 29.2,
+        "Semantic": 36.6
+      }
     },
     {
       "model": "Qwen3-VL-8B-Instruct",
       "displayName": "Qwen3-VL-8B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 36.2,
-      "semantic": 24.1,
-      "temporal": 16.8,
-      "hand": 67.5
+      "scores": {
+        "EgoActionScore": 25.2,
+        "m_tIoU": 10.3,
+        "F1": 28.1,
+        "Temporal": 19.2,
+        "Hand": 43.7,
+        "Verb": 25.5,
+        "Objects": 32.2,
+        "Tools": 51.5,
+        "Motion": 23.0,
+        "Semantic": 31.2
+      }
     },
     {
       "model": "InternVL3.5-8B",
       "displayName": "InternVL3.5-8B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 31.9,
-      "semantic": 18.5,
-      "temporal": 15.5,
-      "hand": 61.7
+      "scores": {
+        "EgoActionScore": 20.4,
+        "m_tIoU": 8.8,
+        "F1": 25.4,
+        "Temporal": 17.1,
+        "Hand": 32.4,
+        "Verb": 19.4,
+        "Objects": 25.5,
+        "Tools": 44.6,
+        "Motion": 16.9,
+        "Semantic": 23.7
+      }
     },
     {
       "model": "MiniCPM-V-4.5-8B",
       "displayName": "MiniCPM-V-4.5-8B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 38.0,
-      "semantic": 21.5,
-      "temporal": 18.6,
-      "hand": 73.8
+      "scores": {
+        "EgoActionScore": 19.4,
+        "m_tIoU": 6.7,
+        "F1": 20.3,
+        "Temporal": 13.5,
+        "Hand": 33.9,
+        "Verb": 21.9,
+        "Objects": 25.2,
+        "Tools": 34.5,
+        "Motion": 20.3,
+        "Semantic": 25.3
+      }
     },
     {
       "model": "Molmo2-8B",
       "displayName": "Molmo2-8B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 24.3,
-      "semantic": 17.0,
-      "temporal": 12.5,
-      "hand": 43.5
+      "scores": {
+        "EgoActionScore": 18.8,
+        "m_tIoU": 8.0,
+        "F1": 21.2,
+        "Temporal": 14.6,
+        "Hand": 30.4,
+        "Verb": 19.1,
+        "Objects": 24.6,
+        "Tools": 41.3,
+        "Motion": 17.3,
+        "Semantic": 23.0
+      }
     },
     {
       "model": "LLaVA-OV2-8B",
       "displayName": "LLaVA-OV2-8B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 36.7,
-      "semantic": 28.1,
-      "temporal": 14.4,
-      "hand": 67.8
+      "scores": {
+        "EgoActionScore": 24.7,
+        "m_tIoU": 9.8,
+        "F1": 26.7,
+        "Temporal": 18.2,
+        "Hand": 42.0,
+        "Verb": 25.8,
+        "Objects": 32.6,
+        "Tools": 48.1,
+        "Motion": 23.9,
+        "Semantic": 31.2
+      }
     },
     {
       "model": "VideoLLaMA3-7B",
       "displayName": "VideoLLaMA3-7B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 25.3,
-      "semantic": 20.1,
-      "temporal": 7.6,
-      "hand": 48.0
+      "scores": {
+        "EgoActionScore": 14.2,
+        "m_tIoU": 4.4,
+        "F1": 11.1,
+        "Temporal": 7.8,
+        "Hand": 24.1,
+        "Verb": 17.4,
+        "Objects": 24.8,
+        "Tools": 38.6,
+        "Motion": 16.3,
+        "Semantic": 20.7
+      }
     },
     {
       "model": "Qwen3-VL-4B-Instruct",
       "displayName": "Qwen3-VL-4B",
-      "sft": false,
+      "group": "Open-source VLMs",
+      "ours": false,
       "reference": false,
-      "score": 40.8,
-      "semantic": 29.0,
-      "temporal": 15.4,
-      "hand": 78.0
+      "scores": {
+        "EgoActionScore": 25.9,
+        "m_tIoU": 9.9,
+        "F1": 28.2,
+        "Temporal": 19.1,
+        "Hand": 46.3,
+        "Verb": 25.2,
+        "Objects": 35.0,
+        "Tools": 47.8,
+        "Motion": 24.0,
+        "Semantic": 32.8
+      }
     },
     {
       "model": "CapRL-Video-4B",
       "displayName": "CapRL-Video-4B",
-      "sft": false,
+      "group": "Open-source video captioning models",
+      "ours": false,
       "reference": false,
-      "score": 43.9,
-      "semantic": 32.4,
-      "temporal": 25.6,
-      "hand": 73.7
+      "scores": {
+        "EgoActionScore": 32.4,
+        "m_tIoU": 16.9,
+        "F1": 40.1,
+        "Temporal": 28.5,
+        "Hand": 49.3,
+        "Verb": 28.7,
+        "Objects": 39.0,
+        "Tools": 60.6,
+        "Motion": 27.5,
+        "Semantic": 36.3
+      }
     },
     {
       "model": "OmniCaptioner-IF-3B",
       "displayName": "OmniCaptioner-IF-3B",
-      "sft": false,
+      "group": "Open-source video captioning models",
+      "ours": false,
       "reference": false,
-      "score": 38.7,
-      "semantic": 20.3,
-      "temporal": 13.4,
-      "hand": 82.4
+      "scores": {
+        "EgoActionScore": 20.0,
+        "m_tIoU": 6.6,
+        "F1": 25.7,
+        "Temporal": 16.1,
+        "Hand": 36.0,
+        "Verb": 18.0,
+        "Objects": 21.9,
+        "Tools": 28.8,
+        "Motion": 19.5,
+        "Semantic": 23.8
+      }
     },
     {
       "model": "OmniCaptioner-IF-7B",
       "displayName": "OmniCaptioner-IF-7B",
-      "sft": false,
+      "group": "Open-source video captioning models",
+      "ours": false,
       "reference": false,
-      "score": 40.1,
-      "semantic": 25.9,
-      "temporal": 19.3,
-      "hand": 75.2
+      "scores": {
+        "EgoActionScore": 23.0,
+        "m_tIoU": 10.1,
+        "F1": 25.0,
+        "Temporal": 17.6,
+        "Hand": 38.5,
+        "Verb": 24.3,
+        "Objects": 26.3,
+        "Tools": 40.8,
+        "Motion": 24.6,
+        "Semantic": 28.5
+      }
     },
     {
       "model": "video-SALMONN-2+-3B",
       "displayName": "video-SALMONN-2+-3B",
-      "sft": false,
+      "group": "Open-source video captioning models",
+      "ours": false,
       "reference": false,
-      "score": 22.2,
-      "semantic": 10.7,
-      "temporal": 7.9,
-      "hand": 47.9
+      "scores": {
+        "EgoActionScore": 10.8,
+        "m_tIoU": 3.5,
+        "F1": 14.2,
+        "Temporal": 8.8,
+        "Hand": 19.9,
+        "Verb": 8.5,
+        "Objects": 13.7,
+        "Tools": 28.4,
+        "Motion": 9.0,
+        "Semantic": 12.8
+      }
     },
     {
       "model": "EgoThinker-7B",
       "displayName": "EgoThinker-7B",
-      "sft": false,
+      "group": "Open-source egocentric video understanding models",
+      "ours": false,
       "reference": false,
-      "score": 43.7,
-      "semantic": 20.0,
-      "temporal": 31.5,
-      "hand": 79.5
+      "scores": {
+        "EgoActionScore": 20.8,
+        "m_tIoU": 13.7,
+        "F1": 24.1,
+        "Temporal": 18.9,
+        "Hand": 33.7,
+        "Verb": 19.0,
+        "Objects": 19.1,
+        "Tools": 13.1,
+        "Motion": 19.5,
+        "Semantic": 22.8
+      }
     },
     {
       "model": "EgoGPT-7B",
       "displayName": "EgoGPT-7B",
-      "sft": false,
+      "group": "Open-source egocentric video understanding models",
+      "ours": false,
       "reference": false,
-      "score": 27.2,
-      "semantic": 19.6,
-      "temporal": 8.8,
-      "hand": 53.0
+      "scores": {
+        "EgoActionScore": 15.4,
+        "m_tIoU": 4.5,
+        "F1": 16.0,
+        "Temporal": 10.3,
+        "Hand": 24.1,
+        "Verb": 18.9,
+        "Objects": 18.4,
+        "Tools": 22.5,
+        "Motion": 20.3,
+        "Semantic": 20.4
+      }
     },
     {
       "model": "RynnBrain-4B",
       "displayName": "RynnBrain-4B",
-      "sft": false,
+      "group": "Open-source egocentric video understanding models",
+      "ours": false,
       "reference": false,
-      "score": 25.3,
-      "semantic": 14.6,
-      "temporal": 19.4,
-      "hand": 41.8
+      "scores": {
+        "EgoActionScore": 13.9,
+        "m_tIoU": 10.4,
+        "F1": 13.3,
+        "Temporal": 11.8,
+        "Hand": 21.2,
+        "Verb": 12.9,
+        "Objects": 15.4,
+        "Tools": 15.7,
+        "Motion": 14.4,
+        "Semantic": 15.9
+      }
     },
     {
       "model": "EgoAction (LLaVA-OV2-8B)",
-      "displayName": "LLaVA-OV2-8B",
-      "sft": true,
+      "displayName": "EgoAction (LLaVA-OV2-8B)",
+      "group": "EgoAction (Ours)",
+      "ours": true,
       "reference": false,
-      "score": 56.7,
-      "semantic": 43.7,
-      "temporal": 40.1,
-      "hand": 86.3
+      "scores": {
+        "EgoActionScore": 47.9,
+        "m_tIoU": 32.3,
+        "F1": 57.0,
+        "Temporal": 44.6,
+        "Hand": 67.0,
+        "Verb": 46.2,
+        "Objects": 51.7,
+        "Tools": 63.0,
+        "Motion": 39.6,
+        "Semantic": 51.2
+      }
     },
     {
       "model": "EgoAction (Qwen3-VL-4B)",
-      "displayName": "Qwen3-VL-4B",
-      "sft": true,
+      "displayName": "EgoAction (Qwen3-VL-4B)",
+      "group": "EgoAction (Ours)",
+      "ours": true,
       "reference": false,
-      "score": 54.1,
-      "semantic": 39.8,
-      "temporal": 36.9,
-      "hand": 85.8
+      "scores": {
+        "EgoActionScore": 41.8,
+        "m_tIoU": 26.6,
+        "F1": 45.9,
+        "Temporal": 36.3,
+        "Hand": 63.4,
+        "Verb": 41.5,
+        "Objects": 47.6,
+        "Tools": 58.2,
+        "Motion": 36.8,
+        "Semantic": 47.4
+      }
     }
   ],
   "duration": [
     {
       "model": "Qwen3-VL-4B",
       "displayName": "Qwen3-VL-4B",
-      "sft": false,
-      "metric": "EgoActionScore",
+      "ours": false,
+      "metric": "Content",
       "values": [
-        36.9,
-        40.1,
-        42.8,
-        46.8,
-        56.0
-      ]
-    },
-    {
-      "model": "EgoAction (Qwen3-VL-4B)",
-      "displayName": "Qwen3-VL-4B",
-      "sft": true,
-      "metric": "EgoActionScore",
-      "values": [
-        48.0,
-        53.6,
-        58.2,
-        63.6,
-        70.6
-      ]
-    },
-    {
-      "model": "LLaVA-OV2-8B",
-      "displayName": "LLaVA-OV2-8B",
-      "sft": false,
-      "metric": "EgoActionScore",
-      "values": [
-        31.6,
-        35.2,
-        39.8,
-        45.9,
-        56.5
-      ]
-    },
-    {
-      "model": "EgoAction (LLaVA-OV2-8B)",
-      "displayName": "LLaVA-OV2-8B",
-      "sft": true,
-      "metric": "EgoActionScore",
-      "values": [
-        49.4,
-        56.9,
-        61.6,
-        66.5,
-        73.4
-      ]
-    },
-    {
-      "model": "Qwen3-VL-32B",
-      "displayName": "Qwen3-VL-32B",
-      "sft": false,
-      "metric": "EgoActionScore",
-      "values": [
-        37.4,
-        41.0,
-        45.0,
-        49.7,
-        59.6
-      ]
-    },
-    {
-      "model": "GPT-6 Astra",
-      "displayName": "GPT-6 Astra",
-      "sft": false,
-      "metric": "EgoActionScore",
-      "values": [
-        50.6,
-        62.3,
-        70.4,
-        74.1,
-        77.9
+        25.3,
+        26.6,
+        30.4,
+        34.9,
+        42.2
       ]
     },
     {
       "model": "Qwen3-VL-4B",
       "displayName": "Qwen3-VL-4B",
-      "sft": false,
+      "ours": false,
       "metric": "Semantic",
       "values": [
-        26.1,
-        27.3,
-        31.0,
-        35.0,
-        41.8
+        29.5,
+        31.3,
+        34.9,
+        39.6,
+        46.6
       ]
     },
     {
-      "model": "EgoAction (Qwen3-VL-4B)",
+      "model": "Qwen3-VL-4B",
       "displayName": "Qwen3-VL-4B",
-      "sft": true,
-      "metric": "Semantic",
+      "ours": false,
+      "metric": "m_tIoU",
       "values": [
-        33.0,
-        38.4,
+        3.6,
+        7.9,
+        13.4,
+        21.3,
+        39.1
+      ]
+    },
+    {
+      "model": "Qwen3-VL-4B",
+      "displayName": "Qwen3-VL-4B",
+      "ours": false,
+      "metric": "Hand",
+      "values": [
+        42.3,
         45.4,
-        50.9,
-        57.0
+        48.5,
+        54.2,
+        60.8
+      ]
+    },
+    {
+      "model": "EgoAction (Qwen3-VL-4B)",
+      "displayName": "EgoAction (Qwen3-VL-4B)",
+      "ours": true,
+      "metric": "Content",
+      "values": [
+        35.0,
+        41.8,
+        48.0,
+        53.5,
+        59.4
+      ]
+    },
+    {
+      "model": "EgoAction (Qwen3-VL-4B)",
+      "displayName": "EgoAction (Qwen3-VL-4B)",
+      "ours": true,
+      "metric": "Semantic",
+      "values": [
+        39.8,
+        47.1,
+        53.5,
+        59.2,
+        65.1
+      ]
+    },
+    {
+      "model": "EgoAction (Qwen3-VL-4B)",
+      "displayName": "EgoAction (Qwen3-VL-4B)",
+      "ours": true,
+      "metric": "m_tIoU",
+      "values": [
+        18.4,
+        26.1,
+        30.3,
+        40.4,
+        56.1
+      ]
+    },
+    {
+      "model": "EgoAction (Qwen3-VL-4B)",
+      "displayName": "EgoAction (Qwen3-VL-4B)",
+      "ours": true,
+      "metric": "Hand",
+      "values": [
+        54.4,
+        63.2,
+        70.5,
+        77.4,
+        83.4
       ]
     },
     {
       "model": "LLaVA-OV2-8B",
       "displayName": "LLaVA-OV2-8B",
-      "sft": false,
-      "metric": "Semantic",
+      "ours": false,
+      "metric": "Content",
       "values": [
-        23.8,
-        26.2,
-        31.1,
-        36.4,
-        44.0
+        23.3,
+        25.9,
+        30.8,
+        36.6,
+        43.9
       ]
     },
     {
-      "model": "EgoAction (LLaVA-OV2-8B)",
+      "model": "LLaVA-OV2-8B",
       "displayName": "LLaVA-OV2-8B",
-      "sft": true,
+      "ours": false,
       "metric": "Semantic",
       "values": [
-        37.2,
-        43.1,
-        49.4,
-        52.4,
-        57.7
+        26.5,
+        29.4,
+        34.6,
+        40.6,
+        48.4
       ]
     },
     {
-      "model": "Qwen3-VL-32B",
-      "displayName": "Qwen3-VL-32B",
-      "sft": false,
-      "metric": "Semantic",
+      "model": "LLaVA-OV2-8B",
+      "displayName": "LLaVA-OV2-8B",
+      "ours": false,
+      "metric": "m_tIoU",
       "values": [
-        29.0,
-        31.1,
-        37.0,
-        41.8,
-        49.8
+        3.2,
+        7.6,
+        13.6,
+        21.8,
+        40.5
       ]
     },
     {
-      "model": "GPT-6 Astra",
-      "displayName": "GPT-6 Astra",
-      "sft": false,
-      "metric": "Semantic",
+      "model": "LLaVA-OV2-8B",
+      "displayName": "LLaVA-OV2-8B",
+      "ours": false,
+      "metric": "Hand",
       "values": [
-        51.7,
-        61.0,
-        68.8,
-        72.1,
-        76.4
-      ]
-    },
-    {
-      "model": "Qwen3-VL-4B",
-      "displayName": "Qwen3-VL-4B",
-      "sft": false,
-      "metric": "Temporal",
-      "values": [
-        6.4,
-        13.5,
-        20.6,
-        30.0,
-        49.4
-      ]
-    },
-    {
-      "model": "EgoAction (Qwen3-VL-4B)",
-      "displayName": "Qwen3-VL-4B",
-      "sft": true,
-      "metric": "Temporal",
-      "values": [
-        27.0,
-        37.2,
-        42.2,
-        50.9,
+        36.1,
+        40.2,
+        46.3,
+        53.3,
         63.4
       ]
     },
     {
-      "model": "LLaVA-OV2-8B",
-      "displayName": "LLaVA-OV2-8B",
-      "sft": false,
-      "metric": "Temporal",
+      "model": "EgoAction (LLaVA-OV2-8B)",
+      "displayName": "EgoAction (LLaVA-OV2-8B)",
+      "ours": true,
+      "metric": "Content",
       "values": [
-        5.5,
-        12.0,
-        19.6,
-        29.5,
-        49.2
+        39.3,
+        45.8,
+        52.0,
+        56.1,
+        61.5
       ]
     },
     {
       "model": "EgoAction (LLaVA-OV2-8B)",
-      "displayName": "LLaVA-OV2-8B",
-      "sft": true,
-      "metric": "Temporal",
+      "displayName": "EgoAction (LLaVA-OV2-8B)",
+      "ours": true,
+      "metric": "Semantic",
       "values": [
-        26.7,
-        41.7,
-        47.7,
-        57.1,
-        70.0
+        44.1,
+        51.1,
+        57.4,
+        61.4,
+        66.5
+      ]
+    },
+    {
+      "model": "EgoAction (LLaVA-OV2-8B)",
+      "displayName": "EgoAction (LLaVA-OV2-8B)",
+      "ours": true,
+      "metric": "m_tIoU",
+      "values": [
+        20.3,
+        33.5,
+        40.3,
+        48.9,
+        59.3
+      ]
+    },
+    {
+      "model": "EgoAction (LLaVA-OV2-8B)",
+      "displayName": "EgoAction (LLaVA-OV2-8B)",
+      "ours": true,
+      "metric": "Hand",
+      "values": [
+        58.8,
+        67.2,
+        73.9,
+        78.2,
+        83.0
       ]
     },
     {
       "model": "Qwen3-VL-32B",
       "displayName": "Qwen3-VL-32B",
-      "sft": false,
-      "metric": "Temporal",
+      "ours": false,
+      "metric": "Content",
       "values": [
-        7.4,
-        15.3,
-        22.9,
-        32.3,
-        51.1
+        28.1,
+        30.5,
+        36.7,
+        41.8,
+        50.0
       ]
     },
     {
-      "model": "GPT-6 Astra",
-      "displayName": "GPT-6 Astra",
-      "sft": false,
-      "metric": "Temporal",
+      "model": "Qwen3-VL-32B",
+      "displayName": "Qwen3-VL-32B",
+      "ours": false,
+      "metric": "Semantic",
       "values": [
-        27.3,
-        46.9,
+        31.8,
+        34.6,
+        40.5,
+        45.9,
+        54.5
+      ]
+    },
+    {
+      "model": "Qwen3-VL-32B",
+      "displayName": "Qwen3-VL-32B",
+      "ours": false,
+      "metric": "m_tIoU",
+      "values": [
+        4.3,
+        9.6,
+        15.9,
+        25.0,
+        45.3
+      ]
+    },
+    {
+      "model": "Qwen3-VL-32B",
+      "displayName": "Qwen3-VL-32B",
+      "ours": false,
+      "metric": "Hand",
+      "values": [
+        42.9,
+        47.0,
+        52.4,
         58.7,
-        64.9,
-        69.4
-      ]
-    },
-    {
-      "model": "Qwen3-VL-4B",
-      "displayName": "Qwen3-VL-4B",
-      "sft": false,
-      "metric": "Hand",
-      "values": [
-        78.3,
-        79.5,
-        76.9,
-        75.5,
-        76.7
-      ]
-    },
-    {
-      "model": "EgoAction (Qwen3-VL-4B)",
-      "displayName": "Qwen3-VL-4B",
-      "sft": true,
-      "metric": "Hand",
-      "values": [
-        84.1,
-        85.1,
-        87.0,
-        89.1,
-        91.3
-      ]
-    },
-    {
-      "model": "LLaVA-OV2-8B",
-      "displayName": "LLaVA-OV2-8B",
-      "sft": false,
-      "metric": "Hand",
-      "values": [
-        65.5,
-        67.4,
-        68.6,
-        71.8,
-        76.3
-      ]
-    },
-    {
-      "model": "EgoAction (LLaVA-OV2-8B)",
-      "displayName": "LLaVA-OV2-8B",
-      "sft": true,
-      "metric": "Hand",
-      "values": [
-        84.3,
-        85.7,
-        87.9,
-        90.1,
-        92.4
-      ]
-    },
-    {
-      "model": "Qwen3-VL-32B",
-      "displayName": "Qwen3-VL-32B",
-      "sft": false,
-      "metric": "Hand",
-      "values": [
-        75.8,
-        76.6,
-        75.1,
-        75.1,
-        77.8
+        69.2
       ]
     },
     {
       "model": "GPT-6 Astra",
       "displayName": "GPT-6 Astra",
-      "sft": false,
+      "ours": false,
+      "metric": "Content",
+      "values": [
+        51.9,
+        61.5,
+        69.6,
+        72.4,
+        76.8
+      ]
+    },
+    {
+      "model": "GPT-6 Astra",
+      "displayName": "GPT-6 Astra",
+      "ours": false,
+      "metric": "Semantic",
+      "values": [
+        55.9,
+        65.2,
+        73.0,
+        75.7,
+        79.5
+      ]
+    },
+    {
+      "model": "GPT-6 Astra",
+      "displayName": "GPT-6 Astra",
+      "ours": false,
+      "metric": "m_tIoU",
+      "values": [
+        23.3,
+        42.7,
+        55.7,
+        62.7,
+        68.1
+      ]
+    },
+    {
+      "model": "GPT-6 Astra",
+      "displayName": "GPT-6 Astra",
+      "ours": false,
       "metric": "Hand",
       "values": [
-        72.6,
-        78.9,
+        67.7,
+        76.4,
         83.6,
-        85.2,
-        88.0
+        86.0,
+        88.5
       ]
     }
   ]

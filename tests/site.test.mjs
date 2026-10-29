@@ -4,7 +4,7 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
-import { HANDS, METRICS, activeActions, clampTime, actionGeometry, formatTime, validateSample } from "../site/logic.js";
+import { HANDS, OVERALL_METRICS, DURATION_METRICS, activeActions, clampTime, actionGeometry, formatTime, validateSample } from "../site/logic.js";
 
 const root = fileURLToPath(new URL("../site/", import.meta.url));
 const sample = JSON.parse(await readFile(join(root, "data/sample.json")));
@@ -46,22 +46,29 @@ test("time and timeline geometry remain inside clip bounds", () => {
 });
 test("duration results contain all 120 original score cells", () => {
   assert.equal(paper.duration.length, 24);
-  for (const metric of METRICS) assert.equal(paper.duration.filter(r => r.metric === metric).length, 6);
+  for (const metric of DURATION_METRICS) assert.equal(paper.duration.filter(r => r.metric === metric).length, 6);
   for (const row of paper.duration) {
     assert.equal(row.values.length, 5);
     row.values.forEach(score => assert(score >= 0 && score <= 100));
   }
-  assert.deepEqual(paper.duration.find(r => r.model === "Qwen3-VL-4B" && r.metric === "Temporal").values, [6.4, 13.5, 20.6, 30.0, 49.4]);
+  assert.deepEqual(paper.duration.find(r => r.model === "EgoAction (Qwen3-VL-4B)" && r.metric === "m_tIoU").values, [18.4, 26.1, 30.3, 40.4, 56.1]);
+  assert.deepEqual(paper.duration.find(r => r.model === "EgoAction (LLaVA-OV2-8B)" && r.metric === "m_tIoU").values, [20.3, 33.5, 40.3, 48.9, 59.3]);
 });
-test("overall rows retain model labels, SFT pairs, and human reference", () => {
+test("complete benchmark results retain 22 result rows and all 220 verified score cells", () => {
+  assert.equal(paper.schemaVersion, 2);
   assert.equal(paper.overall.length, 22);
-  assert.equal(paper.overall.filter(r => r.sft).length, 2);
+  assert.equal(paper.overall.filter(r => r.ours).length, 2);
   assert.equal(paper.overall.filter(r => r.reference).length, 1);
-  assert.equal(paper.overall.find(r => r.model === "EgoAction (Qwen3-VL-4B)").displayName, "Qwen3-VL-4B");
-  assert.equal(paper.overall.find(r => r.model === "EgoAction (LLaVA-OV2-8B)").score, 56.7);
+  assert.equal(new Set(paper.overall.map(r => r.group)).size, 6);
   for (const row of paper.overall) {
-    for (const metric of ["score", "semantic", "temporal", "hand"]) assert(Number.isFinite(row[metric]));
+    assert.deepEqual(Object.keys(row.scores), OVERALL_METRICS);
+    for (const metric of OVERALL_METRICS) assert(Number.isFinite(row.scores[metric]) && row.scores[metric] >= 0 && row.scores[metric] <= 100);
+    assert(Math.abs(row.scores.EgoActionScore - (row.scores.Temporal + row.scores.Semantic) / 2) <= 0.100001);
+    assert(Math.abs(row.scores.Temporal - (row.scores.m_tIoU + row.scores.F1) / 2) <= 0.100001);
+    if (row.ours) assert.equal(row.displayName, row.model);
   }
+  assert.deepEqual(Object.values(paper.overall.find(r => r.model === "EgoAction (Qwen3-VL-4B)").scores), [41.8, 26.6, 45.9, 36.3, 63.4, 41.5, 47.6, 58.2, 36.8, 47.4]);
+  assert.deepEqual(Object.values(paper.overall.find(r => r.model === "EgoAction (LLaVA-OV2-8B)").scores), [47.9, 32.3, 57.0, 44.6, 67.0, 46.2, 51.7, 63.0, 39.6, 51.2]);
 });
 test("HTML has unique IDs, valid local anchors, no fake hrefs, and source abstract", () => {
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
@@ -86,7 +93,7 @@ test("site is self-contained and contains no manuscript source or reference pape
   }
   for (const [, resource] of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
     if (/^https?:/.test(resource)) continue;
-    assert((await stat(join(root, resource))).isFile(), resource);
+    assert((await stat(join(root, resource.split("?")[0]))).isFile(), resource);
   }
   const css = await readFile(join(root, "styles.css"), "utf8");
   assert(css.includes("prefers-reduced-motion"));
@@ -145,12 +152,16 @@ test("analytical viewer retains verbatim source captions in light cards without 
   }
 });
 
-test("standalone benchmark statistics are omitted without changing the abstract", () => {
+test("benchmark overview and results copy omit model-training stages", () => {
   assert(!html.includes('class="stats"'));
   assert(!html.includes("<span>Video episodes</span>"));
   assert(!html.includes("<span>Evaluated VLMs</span>"));
   const abstract = html.match(/<!-- ABSTRACT_START -->(.*?)<!-- ABSTRACT_END -->/s)?.[1];
-  assert.equal(abstract, paper.abstract);
+  assert.equal(abstract, paper.overview);
+  assert(!/\bSFT\b|\bGRPO\b|supervised fine.tuning|reinforcement learning/i.test(html));
+  assert(!html.includes('id="show-all"'));
+  assert(html.includes('scope="colgroup" colspan="3"'));
+  assert(html.includes('scope="colgroup" colspan="6"'));
 });
 
 test("media allowlist and hashes match the reproducible local assets", async () => {

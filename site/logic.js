@@ -1,5 +1,6 @@
 export const HANDS = ["left", "right", "both"];
-export const METRICS = ["EgoActionScore", "Semantic", "Temporal", "Hand"];
+export const OVERALL_METRICS = ["EgoActionScore", "m_tIoU", "F1", "Temporal", "Hand", "Verb", "Objects", "Tools", "Motion", "Semantic"];
+export const DURATION_METRICS = ["m_tIoU", "Content", "Semantic", "Hand"];
 
 export function clampTime(time, duration) {
   return Math.max(0, Math.min(Number.isFinite(time) ? time : 0, duration));

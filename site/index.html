@@ -10,9 +10,9 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://egoaction-bench.github.io/assets/teaser.webp">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261030-results-v2">
   <title>EgoActionBench — Dense Action Captioning</title>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=20261030-results-v2"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -101,7 +101,7 @@
         <article><span class="principle-number">02 / WHEN</span><h3>Precise timing</h3><p>Recover the start and end of each action, including brief movements lasting less than a second.</p><div class="mini-visual time-visual" aria-hidden="true"><span>5.98 s</span><i></i><strong>0.28 s</strong><i></i><span>6.26 s</span></div></article>
         <article><span class="principle-number">03 / WHICH HAND</span><h3>Hand association</h3><p>Distinguish independent left- and right-hand actions from coordinated, two-handed manipulation.</p><div class="mini-visual hand-visual" aria-hidden="true"><span class="left">Left</span><span class="right">Right</span><span class="both">Both</span></div></article>
       </div>
-      <details class="abstract-block"><summary>Read the abstract <span aria-hidden="true">+</span></summary><div id="abstract-text"><!-- ABSTRACT_START -->Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 40,384 human-refined action annotations. To evaluate such dense predictions, we propose a progressive evaluation protocol that first retrieves temporally eligible candidates, selects a prediction by semantic agreement, and then scores its temporal extent and hand association, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 19 vision-language models on EgoActionBench and further perform supervised fine-tuning on two backbones, Qwen3-VL-4B and LLaVA-OneVision-2-8B, using automatically annotated training episodes. Fine-tuning improves EgoActionScore by 13.3 and 20.0 points on the two backbones, respectively, and both adapted models outperform all open-source baselines. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.<!-- ABSTRACT_END --></div></details>
+      <details class="abstract-block"><summary>Read the benchmark overview <span aria-hidden="true">+</span></summary><div id="abstract-text"><!-- ABSTRACT_START -->Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 41,132 human-refined action annotations. To evaluate such dense predictions, we propose a progressive evaluation protocol that retrieves temporally eligible candidates, selects a prediction by content agreement, and scores semantic fidelity and temporal overlap alongside action precision and recall, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 19 vision-language models on EgoActionBench. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.<!-- ABSTRACT_END --></div></details>
       <figure class="teaser-figure">
         <img src="assets/teaser.webp" width="2489" height="1245" loading="lazy" alt="EgoActionBench overview: first-person pumpkin cutting with separate left, right, and both-hand action timelines, atomic captions, and adjacent frames at action boundaries.">
         <figcaption><strong>One video. Multiple layers of understanding.</strong> Dense per-hand captions, atomic action descriptions, and fine-grained temporal boundaries.</figcaption>
@@ -113,15 +113,15 @@
         <div class="intro-grid"><h2>Match the action.<br>Then measure its precision.</h2><p class="section-description">We evaluate what happens, when it happens, and which hand performs it.</p></div>
         <ol class="evaluation-steps">
           <li><span class="step-no">01</span><h3>Temporal eligibility</h3><p>Retrieve candidate predictions that satisfy the temporal eligibility criteria for a reference action.</p></li>
-          <li><span class="step-no">02</span><h3>Semantic selection</h3><p>Select a single prediction by semantic agreement with the reference action.</p></li>
-          <li><span class="step-no">03</span><h3>Temporal &amp; hand scoring</h3><p>Score the selected prediction’s temporal extent and hand assignment.</p></li>
+          <li><span class="step-no">02</span><h3>Content matching</h3><p>Select the prediction with the strongest content match for each reference action.</p></li>
+          <li><span class="step-no">03</span><h3>Temporal and semantic scoring</h3><p>Measure temporal overlap, action coverage, and semantic fidelity.</p></li>
         </ol>
-        <div class="evaluation-note"><span>EgoActionScore</span><p>One overall score, complemented by Semantic, Temporal, and Hand components. Higher is better.</p></div>
+        <div class="evaluation-note"><span>EgoActionScore</span><p>The average of Temporal Overall and Semantic Overall. Higher is better.</p></div>
       </div>
     </section>
 
     <section id="results" class="results wrap section-space" aria-labelledby="results-title">
-      <div class="intro-grid"><h2 id="results-title">Fine-grained understanding<br>remains a challenge.</h2><p class="section-description">Action-level supervision improves recovery on both backbones. Short actions remain especially difficult to localize precisely.</p></div>
+      <div class="intro-grid"><h2 id="results-title">Benchmark results.</h2><p class="section-description">EgoActionBench evaluates temporal localization and semantic fidelity through ten complementary metrics.</p></div>
       <div class="results-toolbar">
         <div class="tabs" role="tablist" aria-label="Result analysis">
           <button id="tab-overall" role="tab" aria-selected="true" aria-controls="panel-overall" tabindex="0">Overall performance</button>
@@ -130,22 +130,29 @@
       </div>
       <div id="results-error" class="error-note" hidden>Results could not be loaded. Please reload the page.</div>
       <div id="panel-overall" role="tabpanel" aria-labelledby="tab-overall">
-        <p class="result-takeaway">Supervised fine-tuning improves EgoActionScore on both backbones.</p>
+        <p class="result-takeaway">19 baseline models, two EgoAction models, and a human reference.</p>
         <div class="table-scroll" role="region" tabindex="0" aria-label="Overall performance table, scroll horizontally on small screens">
-          <table id="overall-table"><caption class="visually-hidden">Dense action captioning on EgoActionBench. Scores transcribed directly from the paper.</caption><thead><tr><th scope="col">Model</th><th scope="col" class="score-cell">EgoActionScore</th><th scope="col">Semantic</th><th scope="col">Temporal</th><th scope="col">Hand</th></tr></thead><tbody></tbody></table>
+          <table id="overall-table">
+            <caption class="visually-hidden">Dense action captioning on EgoActionBench. All 22 rows and 10 metrics from the paper.</caption>
+            <colgroup><col class="model-column"><col span="10"></colgroup>
+            <thead>
+              <tr><th class="result-model" scope="col" rowspan="2">Model</th><th scope="col" rowspan="2" class="score-cell">EgoAction<br>Score</th><th scope="colgroup" colspan="3" class="metric-group">Temporal</th><th scope="colgroup" colspan="6" class="metric-group">Semantic</th></tr>
+              <tr><th scope="col" class="metric-group-start">m-tIoU</th><th scope="col">F1</th><th scope="col" class="score-cell">Overall</th><th scope="col" class="metric-group-start">Hand</th><th scope="col">Verb</th><th scope="col">Objects</th><th scope="col">Tools</th><th scope="col">Motion</th><th scope="col" class="score-cell">Overall</th></tr>
+            </thead><tbody></tbody>
+          </table>
         </div>
-        <div class="table-bottom"><p>Selected comparisons. Shaded rows identify EgoAction SFT; the human expert is a reference, not a model.</p><button id="show-all" class="text-button" type="button" aria-expanded="false">Show all models <span aria-hidden="true">↓</span></button></div>
+        <p class="table-note">Temporal Overall averages m-tIoU and F1. Semantic Overall averages the applicable field scores within each action, then across reference actions.</p>
       </div>
       <div id="panel-duration" role="tabpanel" aria-labelledby="tab-duration" hidden>
-        <p class="result-takeaway">SFT substantially improves sub-second action recovery, particularly temporal localization.</p>
-        <div class="duration-toolbar"><label for="duration-metric">Metric <select id="duration-metric"><option>Temporal</option><option>EgoActionScore</option><option>Semantic</option><option>Hand</option></select></label><span><i class="shade-key"></i>Highlighted columns: actions shorter than one second</span></div>
+        <p class="result-takeaway">Performance across five action-duration ranges, with sub-second actions highlighted.</p>
+        <div class="duration-toolbar"><label for="duration-metric">Metric <select id="duration-metric"><option value="m_tIoU">m-tIoU</option><option>Content</option><option>Semantic</option><option>Hand</option></select></label><span><i class="shade-key"></i>Highlighted columns: actions shorter than one second</span></div>
         <div class="table-scroll" role="region" tabindex="0" aria-label="Action duration performance table, scroll horizontally on small screens">
-          <table id="duration-table"><caption class="visually-hidden">Performance grouped by ground-truth action duration. First two columns highlight sub-second actions.</caption><thead><tr><th scope="col">Model</th><th scope="col" class="short-action">&lt;0.5 s</th><th scope="col" class="short-action">[0.5, 1) s</th><th scope="col">[1, 2) s</th><th scope="col">[2, 5) s</th><th scope="col">≥5 s</th></tr></thead><tbody></tbody></table>
+          <table id="duration-table"><caption class="visually-hidden">Performance grouped by ground-truth action duration. First two columns highlight sub-second actions.</caption><colgroup><col class="model-column"><col span="5"></colgroup><thead><tr><th class="result-model" scope="col">Model</th><th scope="col" class="short-action">&lt;0.5 s</th><th scope="col" class="short-action">[0.5, 1) s</th><th scope="col">[1, 2) s</th><th scope="col">[2, 5) s</th><th scope="col">≥5 s</th></tr></thead><tbody></tbody></table>
         </div>
-        <p class="table-note">The five duration bins are shown separately, without merging or reweighting. A substantial gap between short- and long-action performance remains.</p>
+        <p class="table-note">Each cell averages the selected per-action metric within its ground-truth duration range.</p>
       </div>
-      <noscript><p>Enable JavaScript to view and switch the results tables. The exact table data are also available in <a href="data/paper.json">JSON format</a>.</p></noscript>
-      <div class="results-source"><span>Results from the accompanying manuscript, not a live leaderboard.</span><a href="data/paper.json" download="egoactionbench-results.json">Download table data <span aria-hidden="true">↓</span></a></div>
+      <noscript><p>Enable JavaScript to view and switch the results tables. The exact table data are also available in <a href="data/paper.json?v=20261030-results-v2">JSON format</a>.</p></noscript>
+      <div class="results-source"><span>Results reported in the accompanying paper.</span><a href="data/paper.json?v=20261030-results-v2" download="egoactionbench-results.json">Download table data <span aria-hidden="true">↓</span></a></div>
     </section>
 
     <section id="resources" class="resources-band">
