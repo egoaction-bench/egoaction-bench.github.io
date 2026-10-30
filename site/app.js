@@ -1,6 +1,7 @@
 import { HANDS, OVERALL_METRICS, activeActions, actionGeometry, clampTime, formatTime, validateSample } from "./logic.js?v=20261030-results-v2";
 import { setupHeroMotion, setupScrollMotion } from "./motion.js";
 import { bindTimelineScrubbing } from "./timeline.js";
+import { frameCountFor, frameAtTime, adjacentFrame, frameSeekTime } from "./frames.js";
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -24,7 +25,17 @@ async function setupViewer() {
   const slider = $("#seek");
   const detail = $("#action-detail");
   const play = $("#play-toggle");
+  const previousFrame = $("#previous-frame");
+  const nextFrame = $("#next-frame");
+  const frameReadout = $("#current-frame");
+  const fps = sample.sourceFps;
+  const frameCount = frameCountFor(sample.duration, fps);
+  const hasVideoFrameCallback = typeof video.requestVideoFrameCallback === "function";
   let displayTime = 4.5;
+  let currentFrame = frameAtTime(displayTime, fps, frameCount);
+  let pendingStep = null;
+  let presentedFrameRequest = null;
+  let metadataReady = false;
   let selected = null;
   let frameRequest = null;
   let renderedIds = "";
@@ -123,6 +134,29 @@ async function setupViewer() {
     if (action) selectAction(action);
   });
 
+  function updateFrame(index, presentedTime) {
+    currentFrame = Math.max(0, Math.min(frameCount - 1, index));
+    frameReadout.value = `Frame ${currentFrame}`;
+    if (presentedTime !== undefined) frameReadout.dataset.presentedTime = String(presentedTime);
+    previousFrame.disabled = !metadataReady || currentFrame === 0;
+    nextFrame.disabled = !metadataReady || currentFrame === frameCount - 1;
+  }
+
+  function watchPresentedFrames() {
+    if (!hasVideoFrameCallback || presentedFrameRequest !== null || video.error) return;
+    presentedFrameRequest = video.requestVideoFrameCallback((_, metadata) => {
+      presentedFrameRequest = null;
+      const index = frameAtTime(metadata.mediaTime, fps, frameCount);
+      // Ignore an older decoded frame while a newer seek is still in flight.
+      const nearPausedPosition = !video.paused || Math.abs(video.currentTime - metadata.mediaTime) <= 1 / fps + 0.001;
+      if (nearPausedPosition && (pendingStep === null || pendingStep === index)) {
+        pendingStep = null;
+        updateFrame(index, metadata.mediaTime);
+      }
+      watchPresentedFrames();
+    });
+  }
+
   function update(time) {
     displayTime = clampTime(time, sample.duration);
     const active = activeActions(sample.actions, displayTime);
@@ -131,6 +165,7 @@ async function setupViewer() {
     slider.setAttribute("aria-valuetext", `${displayTime.toFixed(2)} of ${sample.duration.toFixed(2)} seconds`);
     $("#current-time").value = `${formatTime(displayTime)} s`;
     $("#playback-time").value = `${formatTime(displayTime)} / ${formatTime(sample.duration)}`;
+    if (!hasVideoFrameCallback) updateFrame(frameAtTime(displayTime, fps, frameCount));
     heads.forEach((head) => { head.style.left = `${Math.min(99.9, displayTime / sample.duration * 100)}%`; });
     bars.forEach(({ bar, action }) => {
       bar.classList.toggle("is-active", ids.includes(action.id));
@@ -173,13 +208,25 @@ async function setupViewer() {
     });
   }
 
-  function seekTo(time) {
+  function seekTo(time, { stepFrame = null } = {}) {
     video.pause();
+    pendingStep = stepFrame;
     displayTime = clampTime(time, sample.duration);
-    if (video.readyState >= 1) video.currentTime = displayTime;
+    delete frameReadout.dataset.presentedTime;
+    updateFrame(stepFrame ?? frameAtTime(displayTime, fps, frameCount));
+    if (video.readyState >= 1) video.currentTime = stepFrame === null ? displayTime : frameSeekTime(stepFrame, fps);
     markPreset(displayTime);
     update(displayTime);
   }
+
+  function stepFrame(direction) {
+    if (!metadataReady || video.error) return;
+    const target = adjacentFrame(pendingStep ?? currentFrame, direction, frameCount);
+    showAction(null);
+    seekTo(target / fps, { stepFrame: target });
+  }
+  previousFrame.addEventListener("click", () => stepFrame(-1));
+  nextFrame.addEventListener("click", () => stepFrame(1));
 
   function onMetadata() {
     // Video is encoded without changing frame rate or playback speed.
@@ -187,20 +234,29 @@ async function setupViewer() {
       $("#media-error").hidden = false;
       $("#media-error").textContent = "The video and annotation durations do not match. Playback is disabled until the media is corrected.";
       play.disabled = true;
+      metadataReady = false;
+      updateFrame(currentFrame);
       return;
     }
+    metadataReady = true;
     video.currentTime = displayTime;
+    updateFrame(frameAtTime(displayTime, fps, frameCount));
+    watchPresentedFrames();
     update(displayTime);
   }
 
   video.addEventListener("loadedmetadata", onMetadata);
   video.addEventListener("timeupdate", () => update(video.currentTime));
   video.addEventListener("seeked", () => update(video.currentTime));
-  video.addEventListener("play", () => { stopFrames(); setPlaying(true); tick(); });
+  video.addEventListener("play", () => { pendingStep = null; stopFrames(); setPlaying(true); tick(); });
   video.addEventListener("pause", () => { stopFrames(); setPlaying(false); });
-  video.addEventListener("ended", () => { stopFrames(); setPlaying(false); update(sample.duration); });
+  video.addEventListener("ended", () => { pendingStep = null; stopFrames(); setPlaying(false); update(sample.duration); updateFrame(frameCount - 1); });
   video.addEventListener("error", () => {
     play.disabled = true;
+    metadataReady = false;
+    updateFrame(currentFrame);
+    if (presentedFrameRequest !== null) video.cancelVideoFrameCallback(presentedFrameRequest);
+    presentedFrameRequest = null;
     $("#media-error").hidden = false;
   });
   document.addEventListener("visibilitychange", () => {
@@ -245,10 +301,13 @@ async function setupViewer() {
   }
   video.controls = false;
   $("#interactive-controls").hidden = false;
+  updateFrame(currentFrame);
   update(displayTime);
   if (video.readyState >= 1) onMetadata();
   if (video.error) {
     play.disabled = true;
+    metadataReady = false;
+    updateFrame(currentFrame);
     $("#media-error").hidden = false;
   }
 }

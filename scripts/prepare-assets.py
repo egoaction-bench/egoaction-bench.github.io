@@ -63,20 +63,25 @@ def main():
         pdf[0].render(scale=2).to_pil().convert("RGB").save(assets / "teaser.webp", quality=94, method=6)
     subprocess.run([
         str(args.ffmpeg), "-hide_banner", "-loglevel", "error", "-y",
-        "-i", str(args.video), "-t", "10.14", "-an",
-        "-vf", "scale=960:-2", "-c:v", "libx264", "-crf", "24", "-preset", "medium",
+        "-i", str(args.video), "-map", "0:v:0", "-map_metadata", "-1", "-an",
+        "-vf", "trim=start_frame=0:end_frame=507,setpts=N/(50*TB),scale=960:-2",
+        "-r", "50", "-fps_mode", "cfr", "-frames:v", "507",
+        "-c:v", "libx264", "-crf", "24", "-preset", "medium",
         "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(assets / "pumpkin.mp4")
     ], check=True)
     subprocess.run([
         str(args.ffmpeg), "-hide_banner", "-loglevel", "error", "-y",
         "-ss", "4.5", "-i", str(assets / "pumpkin.mp4"), "-frames:v", "1",
+        "-c:v", "libwebp", "-quality", "90",
         str(assets / "pumpkin-poster.webp")
     ], check=True)
     manifest = {
         "note": "Local preview assets. Confirm public release permission before deployment.",
         "video": {"sourceSha256": hashlib.sha256(args.video.read_bytes()).hexdigest(),
                   "clip": [0, 10.14], "sourceFps": 50, "encodedFps": 50,
-                  "audio": "removed", "width": 960, "speedChanged": False},
+                  "audio": "removed", "width": 960, "speedChanged": False,
+                  "frameCount": 507, "frameIndexBase": 0, "firstFrameTimestamp": 0,
+                  "timestampPolicy": "The first 507 native decoded frames, with frame 0 at 0 seconds."},
         "teaserSourceSha256": hashlib.sha256(args.teaser.read_bytes()).hexdigest(),
         "logo": logo_provenance,
         "outputs": {p.name: {"bytes": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}

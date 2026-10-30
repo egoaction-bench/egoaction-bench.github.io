@@ -10,7 +10,13 @@
     "encodedFps": 50,
     "audio": "removed",
     "width": 960,
-    "speedChanged": false
+    "speedChanged": false,
+    "frameCount": 507,
+    "frameIndexBase": 0,
+    "firstFrameTimestamp": 0,
+    "sourceFirstFrameTimestamp": 0.04,
+    "timestampPolicy": "The first 507 native decoded frames, with frame 0 at 0 seconds.",
+    "previousAssetSha256": "35b08bce89e699543184e1def206acd7e383e620c1492a316f6ccd66b835dc3c"
   },
   "teaserSourceSha256": "cb38280ca08e89fab4d84ea82e5e873dc50fa6f2086d61c58ee63aca5af2cc3b",
   "outputs": {
@@ -19,12 +25,12 @@
       "sha256": "71fdc1c0b0427a9d9ab5ea0d2c090e7817a92476c6c6be78d61f820492b8e350"
     },
     "pumpkin-poster.webp": {
-      "bytes": 40054,
-      "sha256": "d5e54eeb4ebef1c1e4cd89c58ebd2a38d7542dc122a9e569dc2a7c15d9a07635"
+      "bytes": 79070,
+      "sha256": "020b2fa65eef4df0a544bfcebfdb5a93dc6c7dece5200df98d8668981bb528dd"
     },
     "pumpkin.mp4": {
-      "bytes": 1920081,
-      "sha256": "35b08bce89e699543184e1def206acd7e383e620c1492a316f6ccd66b835dc3c"
+      "bytes": 1928144,
+      "sha256": "d9d13e79fc43a66eab12e46d169833f62db1e7c38924061a5aab398e5a980050"
     },
     "egoactionbench-logo.webp": {
       "bytes": 308948,
