@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUTS = ("teaser.webp", "pumpkin-poster.webp", "pumpkin.mp4",
            "egoactionbench-logo.webp", "favicon.png")
-REVIEWED_OUTPUTS = ("pumpkin-captioned.mp4", "pumpkin-captioned-poster.webp")
+REVIEWED_OUTPUTS = ("egoaction-film.mp4", "pumpkin-captioned-poster.webp")
 
 
 def prepare_logo(teaser, assets):
@@ -56,7 +56,7 @@ def main():
     previous_manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     reviewed = tuple(name for name in REVIEWED_OUTPUTS if (assets / name).is_file())
     if reviewed and reviewed != REVIEWED_OUTPUTS:
-        raise ValueError("Keep the reviewed captioned video and its poster together.")
+        raise ValueError("Keep the reviewed homepage film and its poster together.")
     logo_provenance = prepare_logo(args.teaser, assets)
     with pdfium.PdfDocument(args.teaser) as pdf:
         assert len(pdf) == 1, "Supply the final single-page teaser, not a comparison deck."
@@ -87,7 +87,7 @@ def main():
         "outputs": {p.name: {"bytes": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
                     for p in (assets / name for name in OUTPUTS + reviewed)},
     }
-    # The approved captioned clip is imported separately, never silently regenerated.
+    # The approved homepage film is imported separately, never silently regenerated.
     if reviewed and "heroVideo" in previous_manifest:
         manifest["heroVideo"] = previous_manifest["heroVideo"]
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")

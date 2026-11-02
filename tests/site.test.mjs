@@ -109,8 +109,9 @@ test("homepage uses the official wordmark and omits decorative section slogans",
   assert(heroVideo);
   assert(!heroVideo.includes("autoplay")); // Motion preference is checked in JS first.
   assert(heroVideo.includes("muted") && heroVideo.includes("playsinline"));
-  assert(heroVideo.includes('src="assets/pumpkin-captioned.mp4"'));
+  assert(heroVideo.includes('src="assets/egoaction-film.mp4?v=20261102-v9-feed"'));
   assert(heroVideo.includes('poster="assets/pumpkin-captioned-poster.webp"'));
+  assert.match(html, /class="hero-expand" href="assets\/egoaction-film\.mp4\?v=20261102-v9-feed"/);
   assert(!/data-hero-hand|id="hero-time"|id="hero-progress"/.test(html));
   assert.match(html, /id="hero-motion-toggle"/);
 });
@@ -167,11 +168,24 @@ test("benchmark overview and results copy omit model-training stages", () => {
 test("media allowlist and hashes match the reproducible local assets", async () => {
   const manifest = JSON.parse(await readFile(new URL("../media-manifest.json", import.meta.url)));
   const assets = (await readdir(join(root, "assets"))).sort();
-  assert.deepEqual(assets, ["egoactionbench-logo.webp", "favicon.png", "pumpkin-captioned-poster.webp", "pumpkin-captioned.mp4", "pumpkin-poster.webp", "pumpkin.mp4", "teaser.webp"]);
+  assert.deepEqual(assets, ["egoaction-film.mp4", "egoactionbench-logo.webp", "favicon.png", "pumpkin-captioned-poster.webp", "pumpkin-poster.webp", "pumpkin.mp4", "teaser.webp"]);
   assert.deepEqual(Object.keys(manifest.outputs).sort(), assets);
   for (const name of assets) {
     const buffer = await readFile(join(root, "assets", name));
     assert.equal(buffer.length, manifest.outputs[name].bytes, name);
     assert.equal(createHash("sha256").update(buffer).digest("hex"), manifest.outputs[name].sha256, name);
   }
+});
+
+test("homepage film declares the duration the preview checks against and stays small", async () => {
+  const manifest = JSON.parse(await readFile(new URL("../media-manifest.json", import.meta.url)));
+  const heroVideo = html.match(/<video id="hero-video"[^>]*>/)?.[0];
+  assert.equal(Number(heroVideo.match(/data-duration="([^"]+)"/)?.[1]), manifest.heroVideo.duration);
+  assert.equal(manifest.heroVideo.asset, "egoaction-film.mp4");
+  assert.equal(manifest.heroVideo.audio, "none");
+  assert.equal(manifest.heroVideo.frames, Math.round(manifest.heroVideo.duration * manifest.heroVideo.fps));
+  assert((await stat(join(root, "assets/egoaction-film.mp4"))).size < 15_000_000);
+  const motion = await readFile(join(root, "motion.js"), "utf8");
+  assert(motion.includes("video.dataset.duration"));
+  assert(!motion.includes("sample.duration"));
 });

@@ -40,13 +40,13 @@
       "bytes": 15084,
       "sha256": "f754ba5349e7731c98341e82eee7daad8bb6e3bb1b12d23ab458027b271a1f0f"
     },
-    "pumpkin-captioned.mp4": {
-      "bytes": 9311616,
-      "sha256": "e8bff7eca84f6ce00b054581eef7159243936befe5c195c543e09987ce0e2b3b"
-    },
     "pumpkin-captioned-poster.webp": {
       "bytes": 174530,
       "sha256": "732223be688203b14e8232ef0cdfd0a2275af618f24e06da190865087f1ce74a"
+    },
+    "egoaction-film.mp4": {
+      "bytes": 13637487,
+      "sha256": "1caa391a97ed9d3e8ad31ad016f4bcba3dab544acd61b8adfd5a4219ebead3f0"
     }
   },
   "logo": {
@@ -56,66 +56,127 @@
       287
     ],
     "wordmark": "Lossless extraction",
-    "favicon": "First letter of the same wordmark, fitted to 192\u00d7192"
+    "favicon": "First letter of the same wordmark, fitted to 192×192"
   },
   "heroVideo": {
-    "asset": "pumpkin-captioned.mp4",
+    "asset": "egoaction-film.mp4",
+    "assetVersion": "20261102-v9-feed",
     "poster": "pumpkin-captioned-poster.webp",
     "posterTime": 4.5,
-    "approvedAt": "2026-10-27",
-    "derivedFromClipSha256": "35b08bce89e699543184e1def206acd7e383e620c1492a316f6ccd66b835dc3c",
-    "annotationSha256": "acb4207e4d27816a7bec196ce4f15f5ae87ba3a5af782fca9dda1d48b08aeaad",
-    "duration": 10.14,
-    "fps": 50,
-    "frames": 507,
+    "storyboardApprovedAt": "2026-11-02",
+    "duration": 46.4,
+    "fps": 30,
+    "frames": 1392,
     "width": 1920,
     "height": 1080,
-    "captions": "Full source captions burned into the reviewed video, preserving half-open intervals.",
-    "positioning": "Hand-aware layout with smooth transitions; empty hand cards are omitted.",
     "audio": "none",
-    "speedChanged": false,
-    "handDetection": {
-      "engine": "macOS Vision VNDetectHumanHandPoseRequest",
-      "sample_rate": 50,
-      "frames_with_two_hands": 505,
-      "missing_filled": [
-        {
-          "frame": 0,
-          "filled_from_frame": 2
-        },
-        {
-          "frame": 1,
-          "filled_from_frame": 2
-        }
+    "encoding": "H.264 High, CRF 25, from the CRF 18 master",
+    "scenes": [
+      {
+        "start": 0,
+        "end": 1.6,
+        "scene": "single_input_with_centered_logo"
+      },
+      {
+        "start": 1.6,
+        "end": 3.2,
+        "scene": "find_every_hand_action"
+      },
+      {
+        "start": 3.2,
+        "end": 12.0,
+        "scene": "continuous_per_hand_atomic_caption_breakdown"
+      },
+      {
+        "start": 12.0,
+        "end": 16.8,
+        "scene": "three_full_frame_spotlights"
+      },
+      {
+        "start": 16.8,
+        "end": 20.8,
+        "scene": "twelve_annotated_scenes"
+      },
+      {
+        "start": 20.8,
+        "end": 30.4,
+        "scene": "target_output_with_playhead_sweep"
+      },
+      {
+        "start": 30.4,
+        "end": 37.6,
+        "scene": "frame_level_boundary_0.28s"
+      },
+      {
+        "start": 37.6,
+        "end": 40.8,
+        "scene": "dataset_statistics"
+      },
+      {
+        "start": 40.8,
+        "end": 46.4,
+        "scene": "white_logo_and_task_name"
+      }
+    ],
+    "openingTiming": "Continuous pumpkin source from 0.8 to 10.12 seconds over the first 12 seconds of the film.",
+    "annotations": "Reference action intervals are aligned with source frames. Opening captions and scene-wall verbs use concise display labels.",
+    "sources": "Pumpkin excerpt plus 11 further annotated episodes (EgoSchema and EPIC-KITCHENS).",
+    "shareVersion": "The same picture with an original 150 BPM score is kept outside this repository.",
+    "spotlightTitle": {
+      "text": "Many tasks. Every hand.",
+      "fade_in": [
+        12.0,
+        12.2
+      ],
+      "hold": [
+        12.2,
+        12.8
+      ],
+      "fade_out": [
+        12.8,
+        13.2
+      ],
+      "veil_max_opacity": 0.18,
+      "veil_fade_in": [
+        12.0,
+        12.2
+      ],
+      "veil_hold": [
+        12.2,
+        12.6
+      ],
+      "veil_fade_out": [
+        12.6,
+        12.8
       ]
     },
-    "layoutVerification": {
-      "caption_text": "verbatim from sample.json",
-      "empty_hand_cards": "omitted",
-      "protection": "bounding union of detected hands plus 32 source pixels, including space between hands",
-      "center_unsafe_spans_frames": [
-        [
-          197,
-          272
-        ],
-        [
-          429,
-          443
-        ]
-      ],
-      "merged_safe_hold_spans_frames": [
-        [
-          197,
-          272
-        ],
-        [
-          429,
-          443
-        ]
-      ],
-      "move_seconds": 0.72,
-      "safe_arrival_lead_seconds": 0.08,
-      "intersection_frames_with_protected_region": 0
-    }
+    "sceneWall": "Twelve labeled scenes with left, right, and both-hand tracks, concise verb labels, and shared playheads (16.8–20.8 s).",
+    "displayLabelOverrides": [
+      {
+        "scene": "sewing",
+        "record_id": "R005680",
+        "hand": "both",
+        "source_verb": "guide",
+        "display_label": "FEED"
+      }
+    ],
+    "datasetStatistics": {
+      "values": {
+        "clips": 1407,
+        "of video": 7.982,
+        "action captions": 41132,
+        "median action length": 0.6
+      },
+      "perHand": {
+        "left": 17319,
+        "right": 19758,
+        "both": 4055
+      },
+      "interval": [
+        37.6,
+        40.8
+      ]
+    },
+    "boundaryScene": "A 0.28-second action, native frames 299–312 at 50 fps, shown once at 0.3 seconds per frame with one neighboring frame on either side."
   }
 }

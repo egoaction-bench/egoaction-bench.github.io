@@ -27,8 +27,9 @@ Do not open the HTML using `file://`; JSON loading needs HTTP.
 - `site/data/sample.json`: eleven original annotations for one 10.14-second excerpt.
 - `scripts/sync-paper.py`: checks main-table values against the result JSON and
   archived final-model scores, and duration CSV values against the LaTeX table.
-- `scripts/prepare-assets.py`: reproduces the small video, poster, teaser image,
-  official teaser wordmark, and first-letter favicon.
+- `scripts/prepare-assets.py`: reproduces the small viewer video, poster, teaser image,
+  official teaser wordmark, and first-letter favicon. The reviewed homepage film and
+  its poster are kept as imported.
 - `tests/`: source-data, interval, asset, HTML, and preview-server regression checks.
 
 ## Content and provenance
@@ -77,7 +78,15 @@ The page uses larger typography throughout: 16 px desktop navigation and primary
 buttons, 18 px narrative text, and 16 px desktop result-table values. Small-screen
 layouts stack the annotations instead of shrinking the captions. Decorative
 eyebrow slogans are omitted; information and control labels remain.
-The homepage video contains the approved moving captions. The analytical viewer
+The homepage film introduces dense per-hand action captioning with a single
+pumpkin-cutting example, demonstrates atomic actions, and then shows three activity
+spotlights and a twelve-scene wall with left, right, and both-hand tracks. It ends
+with the time/hand/caption output, a 0.28-second action shown frame by frame,
+dataset statistics, and the logo (46.4 s, silent). The scene title appears briefly
+with a light veil, and the sewing Both track uses the display label “FEED”.
+The film is rendered outside this repository and imported as a reviewed asset;
+`media-manifest.json` records its scenes, display labels, and sources.
+The analytical viewer
 shows full captions alongside the original clip. Timeline tracks support arbitrary
 clicking and dragging; the action picker and keyboard activation retain action-start
 shortcuts. The results table displays all models and ten grouped metrics, with a
@@ -85,10 +94,11 @@ fixed header and model column for scrolling. The duration tab exposes m-tIoU,
 Content, Semantic, and Hand separately across five time ranges.
 
 The wordmark in the header, hero, and footer is extracted losslessly from the
-final paper teaser, not approximated with a font. The split hero uses the existing
-example clip and its source annotation intervals. It plays muted while visible,
-pauses offscreen, and has an explicit pause/play control. Reduced-motion and
-Save-Data preferences suppress automatic playback. Manually pausing is respected,
+final paper teaser, not approximated with a font. The split hero plays the film
+muted from its start while visible, pauses offscreen, and has an explicit pause/play
+control. Reduced-motion and Save-Data preferences suppress automatic playback and rest
+on the 4.50 s coordinated-action frame. Its duration is declared on the video element
+(`data-duration`) and checked before playback. Manually pausing is respected,
 and the analytical viewer takes precedence over the decorative preview.
 Scroll entry effects are subtle and never hide content by default.
 No reference-site assets, code, or animation libraries are included.

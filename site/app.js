@@ -406,7 +406,7 @@ $("#copy-bibtex").addEventListener("click", async () => {
 });
 
 setupScrollMotion();
-setupHeroMotion(samplePromise).catch((error) => {
+setupHeroMotion().catch((error) => {
   console.error("Homepage preview:", error);
   $("#hero-media-error").hidden = false;
 });

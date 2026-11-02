@@ -27,12 +27,13 @@ export function setupScrollMotion() {
   });
 }
 
-export async function setupHeroMotion(samplePromise) {
-  const sample = await samplePromise;
+export async function setupHeroMotion() {
   const video = document.querySelector("#hero-video");
   const button = document.querySelector("#hero-motion-toggle");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const connection = navigator.connection;
+  const expectedDuration = Number(video.dataset.duration);
+  const autoplayAllowed = () => !reduced.matches && !connection?.saveData;
   const visible = () => {
     const bounds = video.getBoundingClientRect();
     return bounds.bottom > 0 && bounds.top < innerHeight && !document.hidden;
@@ -50,9 +51,8 @@ export async function setupHeroMotion(samplePromise) {
   }
 
   async function reconcile() {
-    const autoplayAllowed = !reduced.matches && !connection?.saveData;
     const shouldPlay = !failed && onScreen && !document.hidden &&
-      userPlaying !== false && (userPlaying === true || autoplayAllowed);
+      userPlaying !== false && (userPlaying === true || autoplayAllowed());
     if (!shouldPlay) { video.pause(); return; }
     try { await video.play(); } catch {
       // Autoplay can be denied by the browser. Keep the poster and explicit play control.
@@ -72,9 +72,10 @@ export async function setupHeroMotion(samplePromise) {
   function initializePosition() {
     if (!initialPositionSet) {
       initialPositionSet = true;
-      video.currentTime = 4.5;
+      // Autoplay tells the film from its start; a static hero rests on the poster's coordinated-action frame.
+      if (!autoplayAllowed()) video.currentTime = 4.5;
     }
-    if (Math.abs(video.duration - sample.duration) > 0.06) { fail(); return; }
+    if (!(Math.abs(video.duration - expectedDuration) <= 0.06)) { fail(); return; }
     reconcile();
   }
 
