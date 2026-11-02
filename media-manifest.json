@@ -45,8 +45,8 @@
       "sha256": "732223be688203b14e8232ef0cdfd0a2275af618f24e06da190865087f1ce74a"
     },
     "egoaction-film.mp4": {
-      "bytes": 13637487,
-      "sha256": "1caa391a97ed9d3e8ad31ad016f4bcba3dab544acd61b8adfd5a4219ebead3f0"
+      "bytes": 13526292,
+      "sha256": "9162b05bf649c4f97722ae0f6b9bbe089a015e91e27403c84ebdb516cca23938"
     }
   },
   "logo": {
@@ -60,7 +60,7 @@
   },
   "heroVideo": {
     "asset": "egoaction-film.mp4",
-    "assetVersion": "20261102-v9-feed",
+    "assetVersion": "20261102-v9-clean-opening",
     "poster": "pumpkin-captioned-poster.webp",
     "posterTime": 4.5,
     "storyboardApprovedAt": "2026-11-02",
@@ -75,7 +75,7 @@
       {
         "start": 0,
         "end": 1.6,
-        "scene": "single_input_with_centered_logo"
+        "scene": "single_input_unobstructed_footage"
       },
       {
         "start": 1.6,
@@ -118,10 +118,10 @@
         "scene": "white_logo_and_task_name"
       }
     ],
-    "openingTiming": "Continuous pumpkin source from 0.8 to 10.12 seconds over the first 12 seconds of the film.",
+    "openingTiming": "Unobstructed pumpkin footage for the first 1.6 seconds. Continuous source time from 0.8 to 10.12 seconds over the first 12 seconds of the film.",
     "annotations": "Reference action intervals are aligned with source frames. Opening captions and scene-wall verbs use concise display labels.",
     "sources": "Pumpkin excerpt plus 11 further annotated episodes (EgoSchema and EPIC-KITCHENS).",
-    "shareVersion": "The same picture with an original 150 BPM score is kept outside this repository.",
+    "shareVersion": "The submission version retains the opening white veil, centered logo, and task name, with an original 150 BPM score; it is kept outside this repository.",
     "spotlightTitle": {
       "text": "Many tasks. Every hand.",
       "fade_in": [
@@ -177,6 +177,11 @@
         40.8
       ]
     },
-    "boundaryScene": "A 0.28-second action, native frames 299–312 at 50 fps, shown once at 0.3 seconds per frame with one neighboring frame on either side."
+    "boundaryScene": "A 0.28-second action, native frames 299–312 at 50 fps, shown once at 0.3 seconds per frame with one neighboring frame on either side.",
+    "openingOverlays": {
+      "whiteVeil": false,
+      "logo": false,
+      "taskName": false
+    }
   }
 }

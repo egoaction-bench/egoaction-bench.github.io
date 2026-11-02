@@ -109,9 +109,9 @@ test("homepage uses the official wordmark and omits decorative section slogans",
   assert(heroVideo);
   assert(!heroVideo.includes("autoplay")); // Motion preference is checked in JS first.
   assert(heroVideo.includes("muted") && heroVideo.includes("playsinline"));
-  assert(heroVideo.includes('src="assets/egoaction-film.mp4?v=20261102-v9-feed"'));
+  assert(heroVideo.includes('src="assets/egoaction-film.mp4?v=20261102-v9-clean-opening"'));
   assert(heroVideo.includes('poster="assets/pumpkin-captioned-poster.webp"'));
-  assert.match(html, /class="hero-expand" href="assets\/egoaction-film\.mp4\?v=20261102-v9-feed"/);
+  assert.match(html, /class="hero-expand" href="assets\/egoaction-film\.mp4\?v=20261102-v9-clean-opening"/);
   assert(!/data-hero-hand|id="hero-time"|id="hero-progress"/.test(html));
   assert.match(html, /id="hero-motion-toggle"/);
 });

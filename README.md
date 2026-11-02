@@ -78,8 +78,8 @@ The page uses larger typography throughout: 16 px desktop navigation and primary
 buttons, 18 px narrative text, and 16 px desktop result-table values. Small-screen
 layouts stack the annotations instead of shrinking the captions. Decorative
 eyebrow slogans are omitted; information and control labels remain.
-The homepage film introduces dense per-hand action captioning with a single
-pumpkin-cutting example, demonstrates atomic actions, and then shows three activity
+The homepage film opens directly on the pumpkin-cutting footage, introduces
+dense per-hand action captioning, demonstrates atomic actions, and shows three activity
 spotlights and a twelve-scene wall with left, right, and both-hand tracks. It ends
 with the time/hand/caption output, a 0.28-second action shown frame by frame,
 dataset statistics, and the logo (46.4 s, silent). The scene title appears briefly
