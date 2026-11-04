@@ -6,12 +6,10 @@ Usage: python3 scripts/sync-paper.py --paper /path/to/EgoAction_Paper \
 Use --results-only to refresh benchmark results without changing demo annotations.
 """
 import argparse
-import csv
 import hashlib
 import html
 import json
 import re
-import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -63,15 +61,13 @@ def benchmark_overview(abstract):
 
 def make_paper_data(paper):
     arxiv = paper / "arxiv"
-    main_rows = table_rows(arxiv / "table/tab_main_results_dev15.tex", 10)
-    if len(main_rows) != 22 or len({model for model, _ in main_rows}) != 22:
-        raise ValueError("Expected 22 unique main-table rows with 10 metrics each.")
-    results = json.loads((arxiv / "data/main_results.json").read_text())
-    if set(results["selected_grpo_rows"]) != EGOACTION_MODELS:
-        raise ValueError("The final EgoAction model selection has changed; review it before exporting.")
+    main_table = arxiv / "table/tab_main_results.tex"
+    main_rows = table_rows(main_table, len(OVERALL_METRICS))
+    if len(main_rows) != 23 or len({model for model, _ in main_rows}) != 23:
+        raise ValueError("Expected 23 unique published main-table rows with 10 metrics each.")
     groups = {}
     group = None
-    for line in (arxiv / "table/tab_main_results_dev15.tex").read_text().splitlines():
+    for line in main_table.read_text().splitlines():
         match = re.match(r"\\modelgroup\{([^}]+)\}", line)
         if match:
             group = match[1]
@@ -79,23 +75,7 @@ def make_paper_data(paper):
             groups[clean_tex(line.split("&", 1)[0])] = group
     overall = []
     for model, values in main_rows:
-        original = results["rows"][model]
-        scores = original["scores"].get("main", original["scores"])
-        if values != [round(scores[metric], 1) for metric in OVERALL_METRICS]:
-            raise ValueError(f"Main table and result JSON disagree: {model}")
         ours = model in EGOACTION_MODELS
-        if ours:
-            selected = results["grpo_selection"]["rows"][model]
-            if original["training_stage"] != "SFT+GRPO" or selected["scores"] != scores:
-                raise ValueError(f"The final-model provenance does not match: {model}")
-            for artifact in ("summary", "result"):
-                snapshot = arxiv / selected[f"{artifact}_snapshot"]
-                if hashlib.sha256(snapshot.read_bytes()).hexdigest() != selected[f"{artifact}_sha256"]:
-                    raise ValueError(f"The archived {artifact} checksum does not match: {model}")
-            archived = json.loads((arxiv / selected["result_snapshot"]).read_text())["new_scores"]
-            archived = archived.get("main", archived)
-            if archived != scores:
-                raise ValueError(f"The archived scores do not match the main results: {model}")
         overall.append({
             "model": model,
             "displayName": model.replace("-Instruct", ""),
@@ -104,7 +84,7 @@ def make_paper_data(paper):
             "scores": dict(zip(OVERALL_METRICS, values)),
         })
     duration_tex = table_rows(arxiv / "table/tab_action_duration.tex", 20)
-    expected = {}
+    duration = []
     backbone = None
     for model, values in duration_tex:
         if model.startswith("+ EgoAction"):
@@ -112,38 +92,22 @@ def make_paper_data(paper):
         else:
             backbone = model
         for i, metric in enumerate(DURATION_METRICS):
-            expected[(model, metric)] = values[i*5:(i+1)*5]
-    duration = []
-    with (arxiv / "data/action_duration/heatmap_scores.csv").open() as f:
-        for row in csv.DictReader(f):
-            model = row["model"]
-            values = [float(row[col]) for col in ["lt_0p5", "0p5_to_1", "1_to_2", "2_to_5", "ge_5"]]
-            if values != expected.get((model, row["metric"])):
-                raise ValueError(f"CSV and manuscript disagree: {model}, {row['metric']}")
             duration.append({"model": model, "displayName": model,
-                             "ours": model in EGOACTION_MODELS, "metric": row["metric"], "values": values})
+                             "ours": model in EGOACTION_MODELS, "metric": metric,
+                             "values": values[i*5:(i+1)*5]})
     if len(duration) != 24 or len({(r["model"], r["metric"]) for r in duration}) != 24:
         raise ValueError("Expected 24 metric/model rows in the duration table.")
-    provenance = json.loads((arxiv / "data/action_duration/provenance_v55.json").read_text())
-    for source in provenance["sources"]["models"]:
-        if source["paper_model"] in EGOACTION_MODELS:
-            selected = results["grpo_selection"]["rows"][source["paper_model"]]
-            if Path(source["folder"]).name != selected["case"]:
-                raise ValueError(f"Duration results use a different model checkpoint: {source['paper_model']}")
     abstract = " ".join(line for line in (arxiv / "abstract.tex").read_text().splitlines()
                         if not line.lstrip().startswith("%"))
     abstract = " ".join(clean_tex(abstract).split())
-    revision = subprocess.check_output(["git", "-C", str(paper), "rev-parse", "HEAD"], text=True).strip()
-    paths = ["arxiv/abstract.tex", "arxiv/table/tab_main_results_dev15.tex", "arxiv/data/main_results.json",
-             "arxiv/table/tab_action_duration.tex", "arxiv/data/action_duration/heatmap_scores.csv",
-             "arxiv/data/action_duration/provenance_v55.json"]
     result = {
         "schemaVersion": 2,
-        "source": {"paperRevision": revision, "note": "Benchmark display values transcribed from the current manuscript tables.",
+        "source": {"paperUrl": "https://arxiv.org/abs/2611.03646",
+                   "publishedVersion": "https://arxiv.org/html/2611.03646v1",
+                   "note": "Display values transcribed from the published main and action-duration tables.",
                    "overviewScope": "Benchmark-focused excerpt of the manuscript abstract.",
-                   "metricProtocolVersion": results["metric_protocol_version"],
-                   "metricProtocolSha256": results["metric_protocol_sha256"],
-                   "files": {p: hashlib.sha256((paper / p).read_bytes()).hexdigest() for p in paths}},
+                   "files": ["arxiv/abstract.tex", "arxiv/table/tab_main_results.tex",
+                             "arxiv/table/tab_action_duration.tex"]},
         "overview": benchmark_overview(abstract), "overall": overall, "duration": duration,
     }
     return result
@@ -214,7 +178,8 @@ def main():
         index.write_text(updated)
     verb = "Verified" if args.check else "Exported"
     print(f"{verb} {len(paper['overall'])} overall rows, {len(paper['duration'])} duration rows, "
-          "220 main-table scores and 120 duration scores. Sources and archived final-model results match.")
+          f"{len(paper['overall']) * len(OVERALL_METRICS)} main-table scores and "
+          f"{sum(len(row['values']) for row in paper['duration'])} duration scores from the published paper tables.")
 
 
 if __name__ == "__main__":

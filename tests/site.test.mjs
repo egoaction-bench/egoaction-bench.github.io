@@ -54,11 +54,12 @@ test("duration results contain all 120 original score cells", () => {
   assert.deepEqual(paper.duration.find(r => r.model === "EgoAction (Qwen3-VL-4B)" && r.metric === "m_tIoU").values, [18.4, 26.1, 30.3, 40.4, 56.1]);
   assert.deepEqual(paper.duration.find(r => r.model === "EgoAction (LLaVA-OV2-8B)" && r.metric === "m_tIoU").values, [20.3, 33.5, 40.3, 48.9, 59.3]);
 });
-test("complete benchmark results retain 22 result rows and all 220 verified score cells", () => {
+test("complete benchmark results retain 23 result rows and all 230 published score cells", () => {
   assert.equal(paper.schemaVersion, 2);
-  assert.equal(paper.overall.length, 22);
+  assert.equal(paper.overall.length, 23);
   assert.equal(paper.overall.filter(r => r.ours).length, 2);
   assert.equal(paper.overall.filter(r => r.reference).length, 1);
+  assert.equal(paper.overall.filter(r => !r.ours && !r.reference).length, 20);
   assert.equal(new Set(paper.overall.map(r => r.group)).size, 6);
   for (const row of paper.overall) {
     assert.deepEqual(Object.keys(row.scores), OVERALL_METRICS);
@@ -69,6 +70,9 @@ test("complete benchmark results retain 22 result rows and all 220 verified scor
   }
   assert.deepEqual(Object.values(paper.overall.find(r => r.model === "EgoAction (Qwen3-VL-4B)").scores), [41.8, 26.6, 45.9, 36.3, 63.4, 41.5, 47.6, 58.2, 36.8, 47.4]);
   assert.deepEqual(Object.values(paper.overall.find(r => r.model === "EgoAction (LLaVA-OV2-8B)").scores), [47.9, 32.3, 57.0, 44.6, 67.0, 46.2, 51.7, 63.0, 39.6, 51.2]);
+  const flora = paper.overall.find(r => r.model === "Flora");
+  assert.equal(flora.group, "Open-source egocentric video understanding models");
+  assert.deepEqual(Object.values(flora.scores), [37.8, 18.6, 46.9, 32.8, 51.2, 41.4, 37.3, 59.0, 41.3, 42.9]);
 });
 test("HTML has unique IDs, valid local anchors, no fake hrefs, and source abstract", () => {
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);

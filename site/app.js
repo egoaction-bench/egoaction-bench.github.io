@@ -334,7 +334,7 @@ function appendRow(body, row, values, duration = false) {
 }
 
 async function setupResults() {
-  const data = await readData("data/paper.json?v=20261030-results-v2");
+  const data = await readData("data/paper.json?v=20261104-results-v3");
   function renderOverall() {
     const table = $("#overall-table");
     table.querySelectorAll("tbody").forEach((body) => body.remove());

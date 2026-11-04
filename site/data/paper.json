@@ -1,21 +1,17 @@
 {
   "schemaVersion": 2,
   "source": {
-    "paperRevision": "a128f917d440d914a3004dc9e1ddb55386e899ee",
-    "note": "Benchmark display values transcribed from the current manuscript tables.",
+    "paperUrl": "https://arxiv.org/abs/2611.03646",
+    "publishedVersion": "https://arxiv.org/html/2611.03646v1",
+    "note": "Display values transcribed from the published main and action-duration tables.",
     "overviewScope": "Benchmark-focused excerpt of the manuscript abstract.",
-    "metricProtocolVersion": "5.5",
-    "metricProtocolSha256": "8ffa7d5ceae792f63e832434f6b20b7b70148391962bd79011583bcc3ecf2b01",
-    "files": {
-      "arxiv/abstract.tex": "52d88ac1fe14f39a655f9d040fec2a6e08587947ec2e51382c6bf2b2245a20cd",
-      "arxiv/table/tab_main_results_dev15.tex": "826955d96a28589871595a406ab5dd4e884c1cf9da74b55d760b4487416a593e",
-      "arxiv/data/main_results.json": "a43257b1417d3b29210a5674d7cdde368bde388817b9320a322fc9828e62fd60",
-      "arxiv/table/tab_action_duration.tex": "24d970a0b3e42df89368c93b6596e219408dbc13f0e60d1e76dd05ae0b50fa4e",
-      "arxiv/data/action_duration/heatmap_scores.csv": "befe981b25e2a1eba5f9e42fd7f5144f9b1ba58802188b0d2004f4d752a10965",
-      "arxiv/data/action_duration/provenance_v55.json": "cf60342c3473cb2afa52a656b6ff08fd30bbc2ce41255689b82f789ffbd816b8"
-    }
+    "files": [
+      "arxiv/abstract.tex",
+      "arxiv/table/tab_main_results.tex",
+      "arxiv/table/tab_action_duration.tex"
+    ]
   },
-  "overview": "Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 41,132 human-refined action annotations. To evaluate such dense predictions, we propose a progressive evaluation protocol that retrieves temporally eligible candidates, selects a prediction by content agreement, and scores semantic fidelity and temporal overlap alongside action precision and recall, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 19 vision-language models on EgoActionBench. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.",
+  "overview": "Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 41,132 human-refined action annotations. To evaluate such dense predictions, we propose an evaluation protocol that retrieves temporally eligible candidates, selects a prediction by content agreement, and scores semantic fidelity and temporal overlap alongside action precision and recall, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 20 baseline models and systems on EgoActionBench. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.",
   "overall": [
     {
       "model": "Human Expert",
@@ -189,6 +185,44 @@
       }
     },
     {
+      "model": "VideoLLaMA3-7B",
+      "displayName": "VideoLLaMA3-7B",
+      "group": "Open-source VLMs",
+      "ours": false,
+      "reference": false,
+      "scores": {
+        "EgoActionScore": 14.2,
+        "m_tIoU": 4.4,
+        "F1": 11.1,
+        "Temporal": 7.8,
+        "Hand": 24.1,
+        "Verb": 17.4,
+        "Objects": 24.8,
+        "Tools": 38.6,
+        "Motion": 16.3,
+        "Semantic": 20.7
+      }
+    },
+    {
+      "model": "Qwen3-VL-4B-Instruct",
+      "displayName": "Qwen3-VL-4B",
+      "group": "Open-source VLMs",
+      "ours": false,
+      "reference": false,
+      "scores": {
+        "EgoActionScore": 25.9,
+        "m_tIoU": 9.9,
+        "F1": 28.2,
+        "Temporal": 19.1,
+        "Hand": 46.3,
+        "Verb": 25.2,
+        "Objects": 35.0,
+        "Tools": 47.8,
+        "Motion": 24.0,
+        "Semantic": 32.8
+      }
+    },
+    {
       "model": "Molmo2-8B",
       "displayName": "Molmo2-8B",
       "group": "Open-source VLMs",
@@ -227,41 +261,22 @@
       }
     },
     {
-      "model": "VideoLLaMA3-7B",
-      "displayName": "VideoLLaMA3-7B",
-      "group": "Open-source VLMs",
+      "model": "video-SALMONN-2+-3B",
+      "displayName": "video-SALMONN-2+-3B",
+      "group": "Open-source video captioning models",
       "ours": false,
       "reference": false,
       "scores": {
-        "EgoActionScore": 14.2,
-        "m_tIoU": 4.4,
-        "F1": 11.1,
-        "Temporal": 7.8,
-        "Hand": 24.1,
-        "Verb": 17.4,
-        "Objects": 24.8,
-        "Tools": 38.6,
-        "Motion": 16.3,
-        "Semantic": 20.7
-      }
-    },
-    {
-      "model": "Qwen3-VL-4B-Instruct",
-      "displayName": "Qwen3-VL-4B",
-      "group": "Open-source VLMs",
-      "ours": false,
-      "reference": false,
-      "scores": {
-        "EgoActionScore": 25.9,
-        "m_tIoU": 9.9,
-        "F1": 28.2,
-        "Temporal": 19.1,
-        "Hand": 46.3,
-        "Verb": 25.2,
-        "Objects": 35.0,
-        "Tools": 47.8,
-        "Motion": 24.0,
-        "Semantic": 32.8
+        "EgoActionScore": 10.8,
+        "m_tIoU": 3.5,
+        "F1": 14.2,
+        "Temporal": 8.8,
+        "Hand": 19.9,
+        "Verb": 8.5,
+        "Objects": 13.7,
+        "Tools": 28.4,
+        "Motion": 9.0,
+        "Semantic": 12.8
       }
     },
     {
@@ -322,25 +337,6 @@
       }
     },
     {
-      "model": "video-SALMONN-2+-3B",
-      "displayName": "video-SALMONN-2+-3B",
-      "group": "Open-source video captioning models",
-      "ours": false,
-      "reference": false,
-      "scores": {
-        "EgoActionScore": 10.8,
-        "m_tIoU": 3.5,
-        "F1": 14.2,
-        "Temporal": 8.8,
-        "Hand": 19.9,
-        "Verb": 8.5,
-        "Objects": 13.7,
-        "Tools": 28.4,
-        "Motion": 9.0,
-        "Semantic": 12.8
-      }
-    },
-    {
       "model": "EgoThinker-7B",
       "displayName": "EgoThinker-7B",
       "group": "Open-source egocentric video understanding models",
@@ -395,6 +391,25 @@
         "Tools": 15.7,
         "Motion": 14.4,
         "Semantic": 15.9
+      }
+    },
+    {
+      "model": "Flora",
+      "displayName": "Flora",
+      "group": "Open-source egocentric video understanding models",
+      "ours": false,
+      "reference": false,
+      "scores": {
+        "EgoActionScore": 37.8,
+        "m_tIoU": 18.6,
+        "F1": 46.9,
+        "Temporal": 32.8,
+        "Hand": 51.2,
+        "Verb": 41.4,
+        "Objects": 37.3,
+        "Tools": 59.0,
+        "Motion": 41.3,
+        "Semantic": 42.9
       }
     },
     {

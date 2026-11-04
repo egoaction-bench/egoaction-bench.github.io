@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="stylesheet" href="styles.css?v=20261030-frames-v1">
   <title>EgoActionBench — Dense Action Captioning</title>
-  <script type="module" src="app.js?v=20261030-frames-v1"></script>
+  <script type="module" src="app.js?v=20261104-results-v3"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -106,7 +106,7 @@
         <article><span class="principle-number">02 / WHEN</span><h3>Frame-level boundaries</h3><p>Action boundaries are annotated at the level of individual video frames.</p><div class="mini-visual time-visual" aria-hidden="true"><span>5.98 s</span><i></i><strong>0.28 s</strong><i></i><span>6.26 s</span></div></article>
         <article><span class="principle-number">03 / WHICH HAND</span><h3>Hand association</h3><p>Distinguish independent left- and right-hand actions from coordinated, two-handed manipulation.</p><div class="mini-visual hand-visual" aria-hidden="true"><span class="left">Left</span><span class="right">Right</span><span class="both">Both</span></div></article>
       </div>
-      <details class="abstract-block"><summary>Read the benchmark overview <span aria-hidden="true">+</span></summary><div id="abstract-text"><!-- ABSTRACT_START -->Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 41,132 human-refined action annotations. To evaluate such dense predictions, we propose a progressive evaluation protocol that retrieves temporally eligible candidates, selects a prediction by content agreement, and scores semantic fidelity and temporal overlap alongside action precision and recall, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 19 vision-language models on EgoActionBench. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.<!-- ABSTRACT_END --></div></details>
+      <details class="abstract-block"><summary>Read the benchmark overview <span aria-hidden="true">+</span></summary><div id="abstract-text"><!-- ABSTRACT_START -->Learning from human data offers a scalable path toward embodied intelligence, yet it requires models to accurately understand fine-grained human actions from egocentric observations. However, existing benchmarks remain limited in action atomicity, temporal precision, and hand–action association. We introduce EgoActionBench, a benchmark that represents continuous human manipulation as temporally localized atomic actions associated with the left hand, right hand, or both hands. EgoActionBench contains 1,407 episodes with 41,132 human-refined action annotations. To evaluate such dense predictions, we propose an evaluation protocol that retrieves temporally eligible candidates, selects a prediction by content agreement, and scores semantic fidelity and temporal overlap alongside action precision and recall, jointly capturing what happens, when it happens, and which hand performs it. We benchmark 20 baseline models and systems on EgoActionBench. Our experiments reveal substantial limitations of current models in action atomicity, temporal precision, and hand–action association, highlighting the gap between general video understanding and the action understanding required for embodied intelligence.<!-- ABSTRACT_END --></div></details>
       <figure class="teaser-figure">
         <img src="assets/teaser.webp" width="2489" height="1245" loading="lazy" alt="EgoActionBench overview: first-person pumpkin cutting with separate left, right, and both-hand action timelines, atomic captions, and adjacent frames at action boundaries.">
         <figcaption><strong>One video. Multiple layers of understanding.</strong> Dense per-hand captions, atomic action descriptions, and fine-grained temporal boundaries.</figcaption>
@@ -135,18 +135,18 @@
       </div>
       <div id="results-error" class="error-note" hidden>Results could not be loaded. Please reload the page.</div>
       <div id="panel-overall" role="tabpanel" aria-labelledby="tab-overall">
-        <p class="result-takeaway">19 baseline models, two EgoAction models, and a human reference.</p>
+        <p class="result-takeaway">20 baseline models and systems, two EgoAction models, and a human reference.</p>
         <div class="table-scroll" role="region" tabindex="0" aria-label="Overall performance table, scroll horizontally on small screens">
           <table id="overall-table">
-            <caption class="visually-hidden">Dense action captioning on EgoActionBench. All 22 rows and 10 metrics from the paper.</caption>
+            <caption class="visually-hidden">Dense action captioning on EgoActionBench. All 23 rows and 10 metrics from the paper.</caption>
             <colgroup><col class="model-column"><col span="10"></colgroup>
             <thead>
-              <tr><th class="result-model" scope="col" rowspan="2">Model</th><th scope="col" rowspan="2" class="score-cell">EgoAction<br>Score</th><th scope="colgroup" colspan="3" class="metric-group">Temporal</th><th scope="colgroup" colspan="6" class="metric-group">Semantic</th></tr>
+              <tr><th class="result-model" scope="col" rowspan="2">Model / system</th><th scope="col" rowspan="2" class="score-cell">EgoAction<br>Score</th><th scope="colgroup" colspan="3" class="metric-group">Temporal</th><th scope="colgroup" colspan="6" class="metric-group">Semantic</th></tr>
               <tr><th scope="col" class="metric-group-start">m-tIoU</th><th scope="col">F1</th><th scope="col" class="score-cell">Overall</th><th scope="col" class="metric-group-start">Hand</th><th scope="col">Verb</th><th scope="col">Objects</th><th scope="col">Tools</th><th scope="col">Motion</th><th scope="col" class="score-cell">Overall</th></tr>
             </thead><tbody></tbody>
           </table>
         </div>
-        <p class="table-note">Temporal Overall averages m-tIoU and F1. Semantic Overall averages the applicable field scores within each action, then across reference actions.</p>
+        <p class="table-note">Temporal Overall averages m-tIoU and F1. Semantic Overall averages the applicable field scores within each action, then across reference actions. Flora uses a 9B temporal segmenter followed by a 27B captioner.</p>
       </div>
       <div id="panel-duration" role="tabpanel" aria-labelledby="tab-duration" hidden>
         <p class="result-takeaway">Performance across five action-duration ranges, with sub-second actions highlighted.</p>
@@ -156,8 +156,8 @@
         </div>
         <p class="table-note">Each cell averages the selected per-action metric within its ground-truth duration range.</p>
       </div>
-      <noscript><p>Enable JavaScript to view and switch the results tables. The exact table data are also available in <a href="data/paper.json?v=20261030-results-v2">JSON format</a>.</p></noscript>
-      <div class="results-source"><span>Results reported in the accompanying paper.</span><a href="data/paper.json?v=20261030-results-v2" download="egoactionbench-results.json">Download table data <span aria-hidden="true">↓</span></a></div>
+      <noscript><p>Enable JavaScript to view and switch the results tables. The exact table data are also available in <a href="data/paper.json?v=20261104-results-v3">JSON format</a>.</p></noscript>
+      <div class="results-source"><span>Results reported in the accompanying paper.</span><a href="data/paper.json?v=20261104-results-v3" download="egoactionbench-results.json">Download table data <span aria-hidden="true">↓</span></a></div>
     </section>
 
     <section id="resources" class="resources-band">

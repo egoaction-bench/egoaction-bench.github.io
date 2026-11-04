@@ -22,11 +22,11 @@ Do not open the HTML using `file://`; JSON loading needs HTTP.
 
 - `site/index.html`, `styles.css`, `app.js`, `logic.js`, `motion.js`, `timeline.js`: the self-contained page.
 - `site/assets/`: seven selected display assets.
-- `site/data/paper.json`: benchmark overview, 22 main-table rows with ten metrics,
+- `site/data/paper.json`: benchmark overview, 23 main-table rows with ten metrics,
   and 24 duration rows with five bins, exported from the manuscript.
 - `site/data/sample.json`: eleven original annotations for one 10.14-second excerpt.
-- `scripts/sync-paper.py`: checks main-table values against the result JSON and
-  archived final-model scores, and duration CSV values against the LaTeX table.
+- `scripts/sync-paper.py`: exports the published main and action-duration LaTeX
+  tables and the benchmark-focused abstract; `--check` verifies the exports.
 - `scripts/prepare-assets.py`: reproduces the small viewer video, poster, teaser image,
   official teaser wordmark, and first-letter favicon. The reviewed homepage film and
   its poster are kept as imported.
@@ -42,10 +42,12 @@ Both examples display the full original captions, and half-open `[start, end)`
 times are preserved. The video is resized, encoded as H.264, and stripped of audio,
 without changing its 50 fps frame rate, time origin, or playback speed.
 
-Results come from the manuscript snapshot and file hashes identified in
-`site/data/paper.json`. All 220 main-table values and 120 duration values retain
-the paper's one-decimal display precision. EgoAction rows use the archived final
-model results. The overview is a benchmark-focused excerpt of the paper abstract.
+Results come from the published paper linked in `site/data/paper.json`.
+All 230 main-table values and 120 duration values retain the paper's one-decimal
+display precision. The main table contains 20 baseline models and systems,
+including Flora, two EgoAction models, and one human reference. Flora uses a 9B
+temporal segmenter followed by a 27B captioner. The overview is a benchmark-focused
+excerpt of the paper abstract.
 The BibTeX entry cites the paper at arXiv:2611.03646.
 
 To update and verify the benchmark overview and scores while preserving the demo:
