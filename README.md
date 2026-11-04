@@ -46,7 +46,7 @@ Results come from the manuscript snapshot and file hashes identified in
 `site/data/paper.json`. All 220 main-table values and 120 duration values retain
 the paper's one-decimal display precision. EgoAction rows use the archived final
 model results. The overview is a benchmark-focused excerpt of the paper abstract.
-The BibTeX entry is a preliminary project citation, not an invented publication.
+The BibTeX entry cites the paper at arXiv:2611.03646.
 
 To update and verify the benchmark overview and scores while preserving the demo:
 
@@ -107,9 +107,9 @@ No reference-site assets, code, or animation libraries are included.
 
 The owner requested the initial GitHub release on October 25, 2026.
 Only the selected website and display assets are included.
-Paper, Code, and Dataset are clearly marked **Coming soon**; replace those statuses
-with reviewed public links when available. The paper source repository is not
-presented as evaluation code.
+Paper links to the arXiv publication, and Dataset links to the released Hugging
+Face videos and annotations with its access instructions. Code & evaluation
+remains marked **Coming soon** while the public toolkit is being prepared.
 
 This project does not grant or replace permissions for third-party media.
 Review release permissions before adding or replacing any display media;
